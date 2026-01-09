@@ -1,0 +1,12 @@
+setenv ipaddr 192.168.3.138;setenv serverip 192.168.3.210
+
+mw.b 28000000 ff 100000;tftpboot 28000000 boot.img--2G;mmc dev 0 1;mmc write 28000000 0 640
+
+env set os_mem;setenv bootargs console=ttyS0,115200,earlyprintk loglevel=8,quiet root=/dev/mmcblk0p5 rootwait rw rootfstype=ext4 gpt blkdevparts=mmcblk0:512K(reserve),512K(uboot_env),8M(kernel),512K(kernel_dtb),-(rootfs);setenv bootcmd 'kernel_start=0x800; kernel_size=0x4000; dtb_start=0x4800; dtb_size=0x400; mmc dev 0 0; mmc read 0x30000000 $kernel_start $kernel_size; mmc read 0x22080000 $dtb_start $dtb_size; bootm 0x30000000 - 0x22080000';saveenv
+
+mw.b 28000000 ff 100000;tftpboot 28000000 kernel.common.img;mmc dev 0 0;mmc write 28000000 800 4000
+
+mw.b 28000000 ff 100000;tftpboot 28000000 smartchip-sca200v100-bd2.dtb;mmc dev 0 0;mmc write 28000000 4800 400
+
+mw.b 28000000 ff 4000000; tftpboot 28000000 linux.ext4.sparse.img;mmc dev 0 0;mmc swrite 28000000 4c00;
+
