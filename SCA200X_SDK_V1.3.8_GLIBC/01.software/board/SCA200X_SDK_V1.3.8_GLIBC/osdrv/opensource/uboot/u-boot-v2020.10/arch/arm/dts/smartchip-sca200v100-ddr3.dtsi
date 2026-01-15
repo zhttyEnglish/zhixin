@@ -1,0 +1,214 @@
+#include <dt-bindings/memory/sca200v100-ddrc.h>
+
+&soc {
+	dmc: dmc {
+		u-boot,dm-pre-reloc;
+		compatible = "smartchip,sca200v100-dmc";
+
+		reg = <0x04000000 0x02000000	// ddr_phy_base
+			   0x06000000 0x00010000	// ddr_ctrl_base
+			   0x06010000 0x00010000	// ddr_reg_base
+			   0x06020000 0x00010000	// ddr_mon_base
+			   0x06030000 0x00010000	// axi_mon0_base
+			   0x06040000 0x00010000	// axi_mon1_base
+			   0x06050000 0x00010000>;	// axi_mon2_base
+
+		params = <0x00000000	// type
+			  0x000003a5	// freq0 640
+			  0x00000320	// freq1 4b0
+			  0x00200000	// density
+			  0x00000000	// refresh_mode	0:fixed x1, 1:fixed x2, 2:fixed x3
+			  0x00000000	// mr1_odic	drv: 0：34ohm,1:48ohm,2:40ohm (Micron only)
+			  0x00000001	// mr1_rtt_nom	ODT: 0:Disable, 1:60ohm, 2:120ohm, 3:40ohm, 4:240ohm, 5:48ohm, 6:80ohm, 7:34ohm
+			  0x00000000	// mr4 2ck rd_preamble 0:Diable, 1:Enable
+			  0x00000000	// mr4 2ck wr_preamble 0:Diable, 1:Enable
+			  0x00000000	// mr5_rd_dbi   Read DBI: 0: disable(Normal), 1: enable
+			  0x00000000	// mr5_wr_dbi	Write DBI: 0: disable(Normal), 1: enable
+			  0x00000001	// mr5_dm	Write DM: 0: disable, 1: enable(Normal)
+			  0x0000000d	// mr6_dram_vref 68.45%
+			  0x00000000	// ddr_hbm
+			  0x00000000	// clk_mode	0:1T mode, 1:2T mode
+			  0x00000000	// sched
+			  0x00000000	// sched1
+			  0x00000000	// perfhpr1
+			  0x00000000	// perflpr1
+			  0x00000000	// perfwr1
+			  0x00000000	// pccfg
+			  0x00000000	// pcfgr_0
+			  0x00000000	// pcfgr_1
+			  0x00000000	// pcfgr_2
+			  0x00000000	// pcfgw_0
+			  0x00000000	// pcfgw_1
+			  0x00000000	// pcfgw_2
+			  0x00000000	// pcfgqos0_0
+			  0x00000000	// pcfgqos0_1
+			  0x00000000	// pcfgqos0_2
+			  0x00000000	// pcfgqos1_0
+			  0x00000000	// pcfgqos1_1
+			  0x00000000	// pcfgqos1_2
+			  0x00000000	// pcfgwqos0_0
+			  0x00000000	// pcfgwqos0_1
+			  0x00000000	// pcfgwqos0_2
+			  0x00000000	// pcfgwqos1_0
+			  0x00000000	// pcfgwqos1_1
+			  0x00000000>;	// pcfgwqos1_2
+
+		phy-pll-config = <0x00000190	// ddr_pll_freq
+				  0x00000010	// loop_div
+				  0x00000002	// post_div
+				  0x00000000	// ssc_en
+				  0x00000003	// ssc_divn
+				  0x00000001	// ssc_num_step
+				  0x00000004	// ssc_kdelta
+				  0x00000000>;	// ssc_mode
+
+		phy-runtime-config = <0x00000000	// Train2D
+					  0x00000000	// skip_train
+					  0x00000000	// debug
+					  0x00000000>;	// RetEn
+
+		phy-input-basic = <0x00000002	// DramType_t DramType;    DRAM Module Type 0x0 | DDR4, 0x1 | DDR3, 0x2 | LPDDR4, 0x3 | LPDDR3, 0x4 | LPDDR2
+				   0x00000004	// DimmType_t DimmType;    Choose the Dimm type from one of below:
+				   0x00000000	// int Lp4xMode;           indicates LPDDR4X mode support.
+				   0x00000004	// int NumDbyte;           Enter number of dbytes physically instantiated in RTL
+				   0x00000004	// int NumActiveDbyteDfi0; Enter number of active dbytes to be controlled by dfi0
+				   0x00000000	// int NumActiveDbyteDfi1; Enter number of active dbytes to be controlled by dfi1
+				   0x0000000a	// int NumAnib;            Enter number of ANIBs physically instantiated
+				   0x00000001	// int NumRank_dfi0;       Number of ranks in DFI0 channel
+				   0x00000000	// int NumRank_dfi1;       Number of ranks in DFI1 channel (if DFI1 exists)
+				   0x00000010	// int DramDataWidth;      Width of the DRAM device.
+				   0x00000001	// int NumPStates;         Number of p-states used
+				   0x000003a5	// int Frequency[4];       Memclk Frequency for each PState. 640
+				   0x00000320	// 320
+				   0x00000320
+				   0x00000190
+				   0x00000000	// int PllBypass[4];       indicates if PLL should be in Bypass mode.
+				   0x00000000
+				   0x00000000
+				   0x00000000
+				   0x00000001	// int DfiFreqRatio[4];    Selected Dfi Frequency ratio
+				   0x00000001
+				   0x00000001
+				   0x00000001
+				   0x00000000	// int Dfi1Exists;         Indicates whether they PHY configuration has Dfi1 channel
+				   0x00000000	// int Train2D;            Obsolete, Not used.
+				   0x00000003	// int HardMacroVer;       Hard Macro Family version in use.
+				   0x00000000	// int ReadDBIEnable[4];   Obsolete. Not Used.
+				   0x00000000
+				   0x00000000
+				   0x00000000
+				   0x00000000>;	// int DfiMode;            Obsolete. Not Used.
+
+		phy-input-advanced = <0x00000000 // int D4RxPreambleLength[4]; Length of read preamble in DDR4 mode
+					  0x00000000
+					  0x00000000
+					  0x00000000
+					  0x00000000 // int D4TxPreambleLength[4]; Length of write preamble in DDR4 mode
+					  0x00000000
+					  0x00000000
+					  0x00000000
+					  0x00000000 // int ExtCalResVal;          External Impedance calibration pull-down resistor value select.
+					  0x00000000 // int Is2Ttiming[4];         Set to 1 to use 2T timing for address/command, otherwise 1T timing will be used
+					  0x00000000
+					  0x00000000
+					  0x00000000
+					  0x0000003c // int ODTImpedance[4];       Enter desired ODT impedance in Ohm
+					  0x0000003c
+					  0x0000003c
+					  0x0000003c
+					  0x00000028 // int TxImpedance[4];        Tx Drive Impedance for DQ/DQS in ohm
+					  0x00000028
+					  0x00000028
+					  0x00000028
+					  0x00000028 // int ATxImpedance;          Tx Drive Impedance for AC in ohm
+					  0x00000000 // int MemAlertEn;            Enables BP_ALERT programming of PHY registers.
+					  0x00000005 // int MemAlertPUImp;         Specify MemAlert Pull-up Termination Impedance
+					  0x00000029 // int MemAlertVrefLevel;     Specify the Vref level for BP_ALERT(MemAlert) Receiver
+					  0x00000000 // int MemAlertSyncBypass;    When set, this bit bypasses the DfiClk synchronizer on dfi_alert_n
+					  0x00000000 // int DisDynAdrTri[4];       Disable Dynamic Per-MEMCLK Address Tristate feature
+					  0x00000000
+					  0x00000000
+					  0x00000000
+					  0x00000000 // int PhyMstrTrainInterval[4]; Specifies the how frequent dfi_phymstr_req is issued by PHY
+					  0x00000000
+					  0x00000000
+					  0x00000000
+					  0x00000000 // int PhyMstrMaxReqToAck[4]; Max time from dfi_phymstr_req asserted to dfi_phymstr_ack asserted
+					  0x00000000
+					  0x00000000
+					  0x00000000
+					  0x00000000 // int WDQSExt;               Enable Write DQS Extension feature of PHY.
+					  0x00000009 // int CalInterval;           Specifies the interval between successive calibrations, in mS.
+					  0x00000000 // int CalOnce;               This setting changes the behaviour of CalRun register.
+					  0x00000000 // int DramByteSwap;          DRAM Oscillator count source mapping for skip_training.
+					  0x00000001 // int RxEnBackOff;           Determines the Placement of PHY Read Gate signal
+					  0x00000000 // int TrainSequenceCtrl;     Firmware Training Sequence Control
+					  0x00000000 // int SnpsUmctlOpt;          - Enable Fast Frequency Change (FFC) Optimizations specific to Synopsys UMCTL2
+					  0x00000000 // int SnpsUmctlF0RC5x[4];    F0RX5x RCD Control Word when using Fast Frequency Change(FFC) optimizations specific to Synopsys UMCTL2
+					  0x00000000
+					  0x00000000
+					  0x00000000
+					  0x0000000f // int TxSlewRiseDQ[4];       Pull-up slew rate control for DBYTE Tx
+					  0x0000000f
+					  0x0000000f
+					  0x0000000f
+					  0x0000000f // int TxSlewFallDQ[4];       Pull-down slew rate control for DBYTE Tx
+					  0x0000000f
+					  0x0000000f
+					  0x0000000f
+					  0x0000000f // int TxSlewRiseAC;          Pull-up slew rate control for ANIB Tx
+					  0x0000000f // int TxSlewFallAC;          Pull-down slew rate control for ANIB Tx
+					  0x00000000 // int EnableHighClkSkewFix;  Enable alternative PIE program
+					  0x00000000 // int DisableUnusedAddrLns;  Turn off or tristate Address Lanes when possible.
+					  0x00000001>; // int PhyInitSequenceNum;    Switches between supported phyinit training sequences
+
+		phy-misc = <0x00000000		// For fast simulation 0x6, Normal 0x0
+				0x00000040		// Use Analytical VREF and Compensate for T28 Attenuator, see PHY databook
+				0x00000004		// hdt controll
+				0x0000031f		// SequenceCtrl 1D P0
+						// Training step to bit mapping:
+						// SequenceCtrl[0] = Run DevInit - Device/phy initialization. Should always be set.
+						// SequenceCtrl[1] = Run WrLvl - Write leveling
+						// SequenceCtrl[2] = Run RxEn - Read gate training
+						// SequenceCtrl[3] = Run RdDQS1D - 1d read dqs training
+						// SequenceCtrl[4] = Run WrDQ1D - 1d write dq training
+						// SequenceCtrl[5] = RFU, must be zero
+						// SequenceCtrl[6] = RFU, must be zero
+						// SequenceCtrl[7] =  RFU, must be zero
+						// SequenceCtrl[8] = Run RdDeskew - Per lane read dq deskew training
+						// SequenceCtrl[9] = Run MxRdLat - Max read latency training
+						// SequenceCtrl[10] = Run Reserved
+						// SequenceCtrl[11] = Run Reserved
+						// SequenceCtrl[12] = Run Reserved
+						// SequenceCtrl[13] = Run Reserved
+						// SequenceCtrl[15-14] =  RFU, must be zero
+				0x0000021f		// SequenceCtrl 1D P1
+				0x0000021f		// SequenceCtrl 1D P2
+				0x0000021f		// SequenceCtrl 1D P3
+				0x00000000		// SequenceCtrl 2D P0
+						// Training step to bit mapping:
+						// SequenceCtrl[0] = Run DevInit - Device/phy initialization. Should always be set.
+						// SequenceCtrl[1] = RFU, must be zero
+						// SequenceCtrl[2] = RFU, must be zero
+						// SequenceCtrl[3] = RFU, must be zero
+						// SequenceCtrl[4] = RFU, must be zero
+						// SequenceCtrl[5] = Run rd2D - 2d read dqs training
+						// SequenceCtrl[6] = Run wr2D - 2d write dq training
+						// SequenceCtrl[7] =  RFU, must be zero
+						// SequenceCtrl[8] = RFU, must be zero
+						// SequenceCtrl[9] = RFU, must be zero
+						// SequenceCtrl[10] = RFU, must be zero
+						// SequenceCtrl[11] = RFU, must be zero
+						// SequenceCtrl[12] = RFU, must be zero
+						// SequenceCtrl[13] = RFU, must be zero
+						// SequenceCtrl[15-14] =  RFU, must be zero
+				0x00000000		// SequenceCtrl 2D P1
+				0x00000000		// SequenceCtrl 2D P2
+				0x00000000>;		// SequenceCtrl 2D P3
+
+		user-type = <0>; //0:ddr4
+		user-density = <256>; // 256Mx16bit
+		user-width = <USER_MODIFY_WIDTH_32BIT>; // 1:16bit; 2:32bit;
+		user-freq = <3200>; // 3200M
+	};
+};

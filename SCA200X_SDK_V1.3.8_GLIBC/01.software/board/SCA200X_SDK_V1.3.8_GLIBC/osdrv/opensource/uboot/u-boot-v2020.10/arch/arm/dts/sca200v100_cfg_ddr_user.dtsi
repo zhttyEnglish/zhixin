@@ -1,0 +1,44 @@
+#include "smartchip-sca200v100-ddr4.dtsi"
+
+&dmc {
+	user-modify0 =	<0		// params->type
+			1600		// params->freq0
+			1200		// params->freq1
+			0x400000	// params->density
+			0		// params->ddr_hbm
+			0		// params->mr1_odic
+			1		// params->mr1_rtt_nom
+			1		// params->mr4_rdpreamble
+			1		// params->mr4_wrpreamble
+			0		// phy-input-basic->DramType
+			4		// phy-input-basic->NumDbyte
+			4		// phy-input-basic->NumActiveDbyteDfi0
+			1		// phy-input-basic->NumPStates
+			1600		// phy-input-basic->Frequency[0]
+			1200		// phy-input-basic->Frequency[1]
+			800		// phy-input-basic->Frequency[2]
+			600		// phy-input-basic->Frequency[3]
+			1		// phy-input-advanced->D4RxPreambleLength[0]
+			1		// phy-input-advanced->D4RxPreambleLength[1]
+			0		// phy-input-advanced->D4RxPreambleLength[2]
+			0		// phy-input-advanced->D4RxPreambleLength[3]
+			1		// phy-input-advanced->D4TxPreambleLength[0]
+			1		// phy-input-advanced->D4TxPreambleLength[1]
+			0		// phy-input-advanced->D4TxPreambleLength[2]
+			0		// phy-input-advanced->D4TxPreambleLength[3]
+			0x3c		// phy-input-advanced->ODTImpedance[0]
+			0x3c		// phy-input-advanced->ODTImpedance[1]
+			0x3c		// phy-input-advanced->ODTImpedance[2]
+			0x3c		// phy-input-advanced->ODTImpedance[3]
+			0x28		// phy-input-advanced->TxImpedance[0]
+			0x28		// phy-input-advanced->TxImpedance[1]
+			0x28		// phy-input-advanced->TxImpedance[2]
+			0x28		// phy-input-advanced->TxImpedance[3]
+			0x28		// phy-input-advanced->ATxImpedance
+			0x0		// phy-pll-config->ssc_en
+			0x3		// phy-pll-config->ssc_divn
+			0x1		// phy-pll-config->ssc_num_step
+			0x4		// phy-pll-config->ssc_kdelta
+			0x0		// phy-pll-config->ssc_mode
+		>;
+};

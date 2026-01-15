@@ -1,0 +1,9 @@
+#menu "GICV2 Support"
+
+config GICV2_SC
+	bool "smartchip gicv2 driver"
+	default y
+	help
+		gicv2 driver
+
+#endmenu # menu "GICV2 Support"

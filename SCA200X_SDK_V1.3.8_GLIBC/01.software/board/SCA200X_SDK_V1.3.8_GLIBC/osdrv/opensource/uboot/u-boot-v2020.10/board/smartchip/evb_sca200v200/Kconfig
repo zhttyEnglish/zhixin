@@ -1,0 +1,29 @@
+choice
+	prompt "sca200v200 Board"
+	default SCA200V200_BD1_EVB
+
+config SCA200V200_BD1_EVB
+	bool "sca200v200 board1"
+	help
+	  demo board
+
+endchoice #"sca200v200 Board"
+
+config SCA200VX_BL1_IMG
+	string "bl1 image"
+	default "bl1_sdram.img"
+	help
+	  boot loader 1 image
+
+config SYS_CONFIG_NAME
+	default "sca200v200_evb"
+
+config SYS_BOARD
+	default "evb_sca200v200"
+
+config GMAC_TX_DELAY
+	int "GMAC Transmit Clock Delay Chain"
+	default 0
+	help
+	  Set the GMAC Transmit Clock Delay Chain value.
+

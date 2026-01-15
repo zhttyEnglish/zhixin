@@ -1,0 +1,14 @@
+#include <dt-bindings/gpio/gpio.h>
+
+&gpio_keys {
+	button@0 {
+		label = "Uboot upgrade";
+		//gpios = <&porta1 1 GPIO_ACTIVE_LOW>;
+	};
+};
+
+&soc {
+	vbus_regulator0: regulator@0 {
+		gpio = <&portg0 8 GPIO_ACTIVE_HIGH>;
+	};
+};

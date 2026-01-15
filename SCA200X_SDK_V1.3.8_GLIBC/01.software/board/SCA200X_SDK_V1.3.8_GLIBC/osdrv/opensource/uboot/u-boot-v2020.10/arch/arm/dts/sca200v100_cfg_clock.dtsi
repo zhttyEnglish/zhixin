@@ -1,0 +1,147 @@
+#include <dt-bindings/clock/sca200v100-cgu.h>
+#include <dt-bindings/power/sca200v100-power.h>
+
+&soc {
+	cgu: cgu@01070000 {
+		u-boot,dm-pre-reloc;
+		compatible = "smartchip,sca200v100-cgu";
+
+		reg = <0x01070000 0x00001000	// cgu
+		       0x01072000 0x00001000	// abb
+		       0x01074000 0x00000140	// top_reg
+		       0x010c0000 0x00000020	// ceva_cgu
+		       0x010e0000 0x00000040>;	// a53_cgu
+
+		abb-freqs = <
+			50000000  // CLK_EMMC
+			50000000  // CLK_SDC0
+			50000000  // CLK_SDC1
+			600000000  // CLKPIXEL
+			40000000  // CLKAUDIO
+			74250000  // CLK_SENSOR_1
+			27000000  // CLK_SENSOR_2
+			40000000  // CLK_BACKUP
+			900000000  // CLK_A53_PLL
+			500000000  // CLK_CEVA_PLL
+			600000000  // CLK_DLA_PLL
+			600000000  // CLK600M
+		>;
+		clk-default-gating = <
+			(CLK_CFG_CS | ON)
+			(CLK_CORE_CS | ON)
+			(CLK_CORE_HDECOMP | ON)
+			(CLK_CFG_HDECOMP | ON)
+			(CLK_CFG_TOPDMAC | ON)
+			(CLK_AXI_TOPDMAC | ON)
+			(CLK_CORE_TOPDMAC | ON)
+			(CLK_CFG_EMMC | ON)
+			(CLK_EMMC_CARDCLK | ON)
+			(CLK_CFG_SEC | ON)
+			(CLK_CFG_EFUSE | ON)
+			(CLK_CFG_ROM | ON)
+			(CLK_CFG_SPIDBG | ON)
+			(CLK_150_NOC_G0 | ON)
+			(CLK_CCI | ON)
+			(CLK_600_NOC | ON)
+			(CLK_CFG_ISP | ON)
+			(CLK_ISP | ON)
+			(CLK_AXI_VIF | ON)
+			(CLK_HDR | ON)
+			(CLK_CFG_SCALER | ON)
+			(CLK_SCALER | ON)
+			(CLK_CFG_JPEG | ON)
+			(CLK_CORE_JPEG | ON)
+			(CLK_CFG_DISP | ON)
+			(CLK_CORE_DISP | ON)
+			(CLK_PIXEL_DISP | ON)
+			(CLK_PATTERN_GEN | ON)
+			(CLK_SUB_1_1X_PIX | ON)
+			(CLK_SUB_1_2X_PIX | ON)
+			(CLK_150_NOC_G1 | ON)
+			(CLK_CFG_CEVA | ON)
+			(CLK_150_NOC_G2 | ON)
+			(CLK_CFG_DLA | ON)
+			(CLK_150_NOC_G4 | ON)
+			(CLK_CFG_DDR | ON)
+			(CLK_DDR | ON)
+			(CLK_CFG_MIPI | ON)
+			(CLK_VIDEO_MIPI0 | ON)
+			(CLK_VIDEO_MIPI1 | ON)
+			(CLK_VIDEO_MIPI2 | ON)
+			(CLK_VIDEO_MIPI3 | ON)
+			(CLK_PCS_MIPI | ON)
+			(CLK_CFG_DSI | ON)
+			(CLK_DSI_PIX | ON)
+			(CLK_CFG_VIF | ON)
+			(CLK_DVP_PIX | ON)
+			(CLK_DVP_PIX_HLY | ON)
+			(CLK_CFG_DVPCTL | ON)
+			(CLK_CFG_USB2OTG0 | ON)
+			(CLK_PHY_USB2PHY0 | ON)
+			(CLK_CFG_USB2OTG1 | ON)
+			(CLK_PHY_USB2PHY1 | ON)
+			(CLK_CFG_USB2OTG2 | ON)
+			(CLK_PHY_USB2PHY2 | ON)
+			(CLK_150_NOC_G5 | ON)
+			(CLK_CFG_GMAC | ON)
+			(CLK_CORE_GMAC | ON)
+			(CLK_PHY_GMAC | ON)
+			(CLK_SRAM | ON)
+			(CLK_SENSOR0 | ON)
+			(CLK_SENSOR1 | ON)
+			(CLK_SENSOR2 | ON)
+			(CLK_SENSOR3 | ON)
+			(CLK_CORE_PERIP | ON)
+			(CLK_SDC_FIXED | ON)
+			(CLK_SDC_SAMPLE | ON)
+			(CLK_SDC_DRV | ON)
+			(CLK_CORE_QSPI | ON)
+			(CLK_AUDIO_300M | ON)
+			(CLK_AUDIO_ADC | ON)
+			(CLK_CFG_VENC | ON)
+			(CLK_AXI_VENC | OFF)
+			(CLK_BPU_VENC | OFF)
+			(CLK_150_NOC_G3 | ON)
+			(CLK_PERIP_I2SM | ON)
+		>;
+		clk-default-sel = <
+			(CLK_CORE_HDECOMP |   CLK_CORE_HDECOMP_CLK666M)
+			(CLK_ISP |   CLK_ISP_CLK200M)
+			(CLK_AXI_VIF |   CLK_AXI_VIF_CLK200M)
+			(CLK_HDR |   CLK_HDR_CLK75M)
+			(CLK_SCALER |   CLK_SCALER_CLK666M)
+			(CLK_CORE_JPEG |   CLK_CORE_JPEG_CLK200M)
+			(CLK_CORE_DISP |   CLK_CORE_DISP_CLK200M)
+			(CLK_PIXEL_DISP |   CLK_PIXEL_DISP_CLKPIXEL_DIV2)
+			(CLK_VIDEO_MIPI0 |   CLK_VIDEO_MIPI0_CLK200M)
+			(CLK_VIDEO_MIPI1 |   CLK_VIDEO_MIPI1_CLK200M)
+			(CLK_VIDEO_MIPI2 |   CLK_VIDEO_MIPI2_CLK200M)
+			(CLK_VIDEO_MIPI3 |   CLK_VIDEO_MIPI3_CLK200M)
+			(CLK_PCS_MIPI |   CLK_PCS_MIPI_CLK200M)
+			(CLK_DSI_PIX |   CLK_DSI_PIX_CLKPIXEL_DIV2)
+			(CLK_CFG_GMAC |   CLK_CFG_GMAC_CLK150M_DIV2)
+			(CLK_PHY_GMAC |   CLK_PHY_GMAC_CLK25M)
+			(CLK_SENSOR0 |   CLK_SENSOR0_CLK_SENSOR_1_DIV2)
+			(CLK_SENSOR1 |   CLK_SENSOR1_CLK_SENSOR_1_DIV2)
+			(CLK_SENSOR2 |   CLK_SENSOR2_CLK_SENSOR_1_DIV2)
+			(CLK_SENSOR3 |   CLK_SENSOR3_CLK_SENSOR_1_DIV2)
+			(CLK_AXI_VENC |  CLK_AXI_VENC_CLK500M)
+			(CLK_BPU_VENC |  CLK_BPU_VENC_CLK300M)
+			(CLK_PERIP_I2SM | CLK_PERIP_I2SM_CLKAUDIO_DIV2)
+		>;
+	};
+
+    pwr_ctrl: pwr_ctrl@01075000 {
+        compatible = "smartchip,sca200v100-pwr_ctrl";
+        #power-domain-cells = <1>;
+        reg = <0x01075000 0x000C    // SOC PMU
+               0x010E0000 0x0050    // A53 CGU
+               0x010C3000 0x0080    // CEVA CORE0
+               >;
+        pwr-default-gating = <(SCA200V100_PWR_CTRL_SOC_VENC   | SCA200V100_PWR_CTRL_OFF)
+                              (SCA200V100_PWR_CTRL_SOC_ISP    | SCA200V100_PWR_CTRL_OFF)
+                              (SCA200V100_PWR_CTRL_SOC_DLA    | SCA200V100_PWR_CTRL_OFF)
+                              (SCA200V100_PWR_CTRL_CEVA_CORE0 | SCA200V100_PWR_CTRL_OFF)
+                              >;
+    };
+};

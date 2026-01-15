@@ -1,0 +1,20 @@
+if SMARTCHIP_SCA200V200
+
+config SYS_SOC
+	default "sca200v200"
+
+config SYS_MALLOC_F_LEN
+	default 0x400
+
+config DEBUG_UART_CHANNEL
+	int "Mux channel to use for debug UART2/UART3"
+	depends on DEBUG_UART_BOARD_INIT
+	default 0
+	help
+	  UART2 and UART3 can use two different set of pins to route the output.
+	  For using the UART for early debugging the route to use needs
+	  to be declared (0 or 1).
+
+source "board/smartchip/evb_sca200v200/Kconfig"
+
+endif

@@ -1,0 +1,12 @@
+/* SPDX-License-Identifier: GPL-2.0+ */
+/*
+ * Copyright (c) 2021 SmartChip Electronics Co. Ltd.
+ */
+
+#ifndef _DT_BINDINGS_DDRC_SMARTCHIP_SCA200V100_H
+#define _DT_BINDINGS_DDRC_SMARTCHIP_SCA200V100_H
+
+#define USER_MODIFY_WIDTH_16BIT 1
+#define USER_MODIFY_WIDTH_32BIT 2
+
+#endif /* _DT_BINDINGS_DDRC_SMARTCHIP_SCA200V100_H */

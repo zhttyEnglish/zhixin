@@ -1,0 +1,165 @@
+/*
+ * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
+ *
+ * Minimal dts file for the MSI Primo81 for u-boot only
+ *
+ * SPDX-License-Identifier:     GPL-2.0+ or X11
+ */
+
+/dts-v1/;
+
+#include "smartchip-sca200v100.dtsi"
+#include "smartchip-sca200v100-ddr4.dtsi"
+#include "sca200v100_cfg_clock.dtsi"
+#include "sca200v100_cfg_pin_bd2_dev.dtsi"
+#include "sca200v100_cfg_extra.dtsi"
+//#include "sca200v100_cfg_ddr_user.dtsi"
+
+//#if gCONFIG_SMARTCHIP_SMARTX_DDR_TYPE==ddr3
+//#include "smartchip-smartx-ddr3.dtsi"
+//#elif gCONFIG_SMARTCHIP_SMARTX_DDR_TYPE==ddr4
+//#include "smartchip-smartx-ddr4.dtsi"
+//#elif gCONFIG_SMARTCHIP_SMARTX_DDR_TYPE==lpddr3
+//#include "smartchip-smartx-lpddr3.dtsi"
+//#endif
+
+/ {
+	model = "SmartChip sca200v100 demo board2";
+	compatible = "smartchip, smartx-demo";
+
+	aliases {
+		console = &uart0;
+		serial0 = &uart0;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+};
+
+&dmc {
+	user-type = <0>; //0:ddr4
+	user-density = <512>; // 256Mx16bit
+	user-width = <USER_MODIFY_WIDTH_32BIT>; // 1:16bit; 2:32bit;
+	user-freq = <2400>; // 2400M
+};
+
+&uart0 {
+	u-boot,dm-pre-reloc;
+	status = "okay";
+};
+
+#if defined(CONFIG_MMC)
+&emmc {
+	u-boot,dm-pre-reloc;
+	status = "okay";
+};
+
+&sdmmc {
+	max-frequency = <10000000>;
+	fifo-depth = <128>;
+	bus-width = <4>;
+	status = "okay";
+};
+#endif
+
+&gmac {
+	status = "okay";
+};
+
+&usb_otg0 {
+	vbus-supply = <&vbus_regulator0>;
+	dr_mode = "host";
+	status = "okay";
+};
+
+&usb_device0 {
+	status = "okay";
+};
+
+&usb_otg1 {
+	vbus-supply = <&vbus_regulator1>;
+	dr_mode = "host";
+	status = "okay";
+};
+
+&usb_device1 {
+	status = "okay";
+};
+
+&usb_otg2 {
+	vbus-supply = <&vbus_regulator2>;
+	dr_mode = "host";
+	status = "okay";
+};
+
+&usb_device2 {
+	status = "okay";
+};
+
+#if defined(CONFIG_SPI_FLASH) || defined(CONFIG_MTD_SPI_NAND)
+&qspi {
+	u-boot,dm-pre-reloc;
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	flash@0 {
+		u-boot,dm-pre-reloc;
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <100000000>;
+		spi-tx-bus-width = <4>;
+		spi-rx-bus-width = <4>;
+	};
+
+	flash@1 {
+		u-boot,dm-pre-reloc;
+		compatible = "jedec,spi-nor";
+		reg = <1>;
+		spi-max-frequency = <200000000>;
+		spi-tx-bus-width = <4>;
+		spi-rx-bus-width = <4>;
+	};
+
+	flash@2 {
+		u-boot,dm-pre-reloc;
+		compatible = "spi-nand";
+		reg = <2>;
+		spi-max-frequency = <100000000>;
+		spi-tx-bus-width = <4>;
+		spi-rx-bus-width = <4>;
+	};
+};
+#endif
+
+&wdt0 {
+	u-boot,dm-pre-reloc;
+	status = "okay";
+};
+
+&gpio_reboot {
+	status = "okay";
+};
+
+&saradc {
+	status = "okay";
+};
+
+&leds {
+	pinctrl-names = "default";
+	pinctrl-0 = <&led_pins>;
+	status = "okay";
+
+	led_upgrade {
+		label = "upgrade";
+		gpios = <&gpio1_c 1 GPIO_ACTIVE_HIGH>;
+	};
+
+	led_upgrade_bd2 {
+		label = "upgrade_bd2";
+		gpios = <&gpio1_c 4 GPIO_ACTIVE_HIGH>;
+	};
+};
+

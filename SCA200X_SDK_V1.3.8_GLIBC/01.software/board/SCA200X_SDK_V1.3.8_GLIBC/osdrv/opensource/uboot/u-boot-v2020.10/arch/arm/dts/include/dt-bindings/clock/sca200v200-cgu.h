@@ -1,0 +1,411 @@
+/* SPDX-License-Identifier: GPL-2.0+ */
+/*
+ * Copyright (c) 2021 SmartChip Electronics Co. Ltd.
+ */
+
+#ifndef _DT_BINDINGS_CLK_SMARTCHIP_SCA200V200_H
+#define _DT_BINDINGS_CLK_SMARTCHIP_SCA200V200_H
+
+/*********** gating and divider clock ID ***********/
+#define CLK_ID_MASK             0xff000000
+#define CLK_ID_SHIFT            24
+#define CLK_GATE_MASK           0x00f00000
+#define CLK_GATE_SHIFT          20
+#define CLK_SEL_MASK            0x000f0000
+#define CLK_SEL_SHIFT           16
+#define CLK_DIV_MASK            0x0000ffff
+#define CLK_DIV_SHIFT           0
+
+#define CLK_ID(x)           ((x) << CLK_ID_SHIFT)
+#define CLK_GATE(x)         ((x) << CLK_GATE_SHIFT)
+#define CLK_SEL(x)          ((x) << CLK_SEL_SHIFT)
+#define CLK_DIV(x)          (x)
+
+#define CGU_AXI_CLK          CLK_ID(0x00)
+#define CGU_AXI_CLK_PRE_A    CLK_ID(0x01)
+#define CGU_AXI_CLK_PRE_B    CLK_ID(0x02)
+#define  AXI_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  AXI_FIX_PLL_CLK500     CLK_SEL(0x1)
+#define  AXI_FIX_PLL_CLK400     CLK_SEL(0x2)
+#define  AXI_FIX_PLL_CLK333     CLK_SEL(0x3)
+#define  AXI_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  AXI_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  AXI_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  AXI_AUDIO_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_SYS_CLK         CLK_ID(0x03)
+#define CGU_SYS_CLK_PRE_A   CLK_ID(0x04)
+#define CGU_SYS_CLK_PRE_B   CLK_ID(0x05)
+#define  SYS_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  SYS_ADC_PLL_CLK300     CLK_SEL(0x1)
+#define  SYS_FIX_PLL_CLK400     CLK_SEL(0x2)
+#define  SYS_FIX_PLL_CLK333     CLK_SEL(0x3)
+#define  SYS_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  SYS_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  SYS_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  SYS_AUDIO_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_ISP_CLK         CLK_ID(0x06)
+#define  ISP_FIX_PLL_CLK666     CLK_SEL(0x0)
+#define  ISP_FIX_PLL_CLK500     CLK_SEL(0x1)
+#define  ISP_FIX_PLL_CLK400     CLK_SEL(0x2)
+#define  ISP_FIX_PLL_CLK333     CLK_SEL(0x3)
+#define  ISP_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  ISP_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  ISP_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  ISP_AUDIO_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_ISP_HDR_CLK         CLK_ID(0x07)
+#define  ISP_HDR_FIX_PLL_CLK666     CLK_SEL(0x0)
+#define  ISP_HDR_FIX_PLL_CLK500     CLK_SEL(0x1)
+#define  ISP_HDR_FIX_PLL_CLK400     CLK_SEL(0x2)
+#define  ISP_HDR_FIX_PLL_CLK333     CLK_SEL(0x3)
+#define  ISP_HDR_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  ISP_HDR_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  ISP_HDR_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  ISP_HDR_AUDIO_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_VIF_AXI_CLK         CLK_ID(0x08)
+#define  VIF_AXI_FIX_PLL_CLK666     CLK_SEL(0x0)
+#define  VIF_AXI_FIX_PLL_CLK500     CLK_SEL(0x1)
+#define  VIF_AXI_FIX_PLL_CLK400     CLK_SEL(0x2)
+#define  VIF_AXI_FIX_PLL_CLK333     CLK_SEL(0x3)
+#define  VIF_AXI_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  VIF_AXI_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  VIF_AXI_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  VIF_AXI_AUDIO_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_DLA_CLK         CLK_ID(0x09)
+#define  DLA_FIX_PLL_CLK800     CLK_SEL(0x0)
+#define  DLA_FIX_PLL_CLK666     CLK_SEL(0x1)
+#define  DLA_FIX_PLL_CLK500     CLK_SEL(0x2)
+#define  DLA_FIX_PLL_CLK400     CLK_SEL(0x3)
+#define  DLA_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  DLA_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  DLA_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  DLA_MIPITX_PLL_DIV2    CLK_SEL(0x7)
+
+#define CGU_RSZ_CLK         CLK_ID(0x0a)
+#define  RSZ_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  RSZ_FIX_PLL_CLK500     CLK_SEL(0x1)
+#define  RSZ_FIX_PLL_CLK400     CLK_SEL(0x2)
+#define  RSZ_FIX_PLL_CLK333     CLK_SEL(0x3)
+#define  RSZ_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  RSZ_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  RSZ_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  RSZ_AUDIO_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_DE_CLK          CLK_ID(0x0b)
+#define  DE_CGU_OSCIN_CLK       CLK_SEL(0x0)
+#define  DE_FIX_PLL_CLK500      CLK_SEL(0x1)
+#define  DE_FIX_PLL_CLK400      CLK_SEL(0x2)
+#define  DE_FIX_PLL_CLK333      CLK_SEL(0x3)
+#define  DE_ADC_PLL_CLK600      CLK_SEL(0x4)
+#define  DE_ADC_PLL_CLK400      CLK_SEL(0x5)
+#define  DE_PIXEL_PLL_CLK       CLK_SEL(0x6)
+#define  DE_AUDIO_PLL_CLK       CLK_SEL(0x7)
+
+#define CGU_VENC_CLK            CLK_ID(0x0c)
+#define  VENC_CGU_OSCIN_CLK         CLK_SEL(0x0)
+#define  VENC_FIX_PLL_CLK500        CLK_SEL(0x1)
+#define  VENC_FIX_PLL_CLK400        CLK_SEL(0x2)
+#define  VENC_FIX_PLL_CLK333        CLK_SEL(0x3)
+#define  VENC_ADC_PLL_CLK600        CLK_SEL(0x4)
+#define  VENC_ADC_PLL_CLK400        CLK_SEL(0x5)
+#define  VENC_PIXEL_PLL_CLK         CLK_SEL(0x6)
+#define  VENC_AUDIO_PLL_CLK         CLK_SEL(0x7)
+
+#define CGU_JPEG_CLK            CLK_ID(0x0d)
+#define  JPEG_CGU_OSCIN_CLK         CLK_SEL(0x0)
+#define  JPEG_FIX_PLL_CLK500        CLK_SEL(0x1)
+#define  JPEG_FIX_PLL_CLK400        CLK_SEL(0x2)
+#define  JPEG_FIX_PLL_CLK333        CLK_SEL(0x3)
+#define  JPEG_ADC_PLL_CLK600        CLK_SEL(0x4)
+#define  JPEG_ADC_PLL_CLK400        CLK_SEL(0x5)
+#define  JPEG_PIXEL_PLL_CLK         CLK_SEL(0x6)
+#define  JPEG_AUDIO_PLL_CLK         CLK_SEL(0x7)
+
+#define CGU_MIPI_CSI_0_CLK      CLK_ID(0x0e)
+#define  MIPI_CSI_0_CGU_OSCIN_CLK   CLK_SEL(0x0)
+#define  MIPI_CSI_0_FIX_PLL_CLK500  CLK_SEL(0x1)
+#define  MIPI_CSI_0_FIX_PLL_CLK400  CLK_SEL(0x2)
+#define  MIPI_CSI_0_FIX_PLL_CLK333  CLK_SEL(0x3)
+#define  MIPI_CSI_0_ADC_PLL_CLK600  CLK_SEL(0x4)
+#define  MIPI_CSI_0_ADC_PLL_CLK400  CLK_SEL(0x5)
+#define  MIPI_CSI_0_PIXEL_PLL_CLK   CLK_SEL(0x6)
+#define  MIPI_CSI_0_AUDIO_PLL_CLK   CLK_SEL(0x7)
+
+#define CGU_MIPI_CSI_1_CLK      CLK_ID(0x0f)
+#define  MIPI_CSI_1_CGU_OSCIN_CLK   CLK_SEL(0x0)
+#define  MIPI_CSI_1_FIX_PLL_CLK500  CLK_SEL(0x1)
+#define  MIPI_CSI_1_FIX_PLL_CLK400  CLK_SEL(0x2)
+#define  MIPI_CSI_1_FIX_PLL_CLK333  CLK_SEL(0x3)
+#define  MIPI_CSI_1_ADC_PLL_CLK600  CLK_SEL(0x4)
+#define  MIPI_CSI_1_ADC_PLL_CLK400  CLK_SEL(0x5)
+#define  MIPI_CSI_1_PIXEL_PLL_CLK   CLK_SEL(0x6)
+#define  MIPI_CSI_1_AUDIO_PLL_CLK   CLK_SEL(0x7)
+
+#define CGU_MIPI_PCS_CLK        CLK_ID(0x10)
+#define  MIPI_PCS_CGU_OSCIN_CLK     CLK_SEL(0x0)
+#define  MIPI_PCS_FIX_PLL_CLK500    CLK_SEL(0x1)
+#define  MIPI_PCS_FIX_PLL_CLK400    CLK_SEL(0x2)
+#define  MIPI_PCS_FIX_PLL_CLK333    CLK_SEL(0x3)
+#define  MIPI_PCS_ADC_PLL_CLK600    CLK_SEL(0x4)
+#define  MIPI_PCS_ADC_PLL_CLK400    CLK_SEL(0x5)
+#define  MIPI_PCS_PIXEL_PLL_CLK     CLK_SEL(0x6)
+#define  MIPI_PCS_AUDIO_PLL_CLK     CLK_SEL(0x7)
+
+#define CGU_SD0_FIX_CLK         CLK_ID(0x11)
+#define CGU_SD0_SAMPLE_CLK      CLK_ID(0x12)
+#define CGU_SD0_DRV_CLK         CLK_ID(0x13)
+#define CGU_SD1_FIX_CLK         CLK_ID(0x14)
+#define CGU_SD1_SAMPLE_CLK      CLK_ID(0x15)
+#define CGU_SD1_DRV_CLK         CLK_ID(0x16)
+#define CGU_EMMC_FIX_CLK        CLK_ID(0x17)
+#define CGU_EMMC_SAMPLE_CLK     CLK_ID(0x18)
+#define CGU_EMMC_DRV_CLK        CLK_ID(0x19)
+
+#define CGU_QSPI_CLK            CLK_ID(0x1a)
+#define  QSPI_FIX_PLL_CLK666        CLK_SEL(0x0)
+#define  QSPI_FIX_PLL_CLK500        CLK_SEL(0x1)
+#define  QSPI_FIX_PLL_CLK400        CLK_SEL(0x2)
+#define  QSPI_FIX_PLL_CLK333        CLK_SEL(0x3)
+#define  QSPI_ADC_PLL_CLK600        CLK_SEL(0x4)
+#define  QSPI_ADC_PLL_CLK400        CLK_SEL(0x5)
+#define  QSPI_PIXEL_PLL_CLK         CLK_SEL(0x6)
+#define  QSPI_AUDIO_PLL_CLK         CLK_SEL(0x7)
+
+#define CGU_I2S_MCLK        CLK_ID(0x1b)
+#define  I2S_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  I2S_AUDIO_PLL_CLK      CLK_SEL(0x1)
+
+#define CGU_I2S_MST0_SCLK       CLK_ID(0x1c)
+#define  I2S_MST0_CGU_I2S_MCLK      CLK_SEL(0x0)
+
+#define CGU_I2S_MST1_SCLK       CLK_ID(0x1d)
+#define  I2S_MST0_CGU_I2S_MCLK      CLK_SEL(0x0)
+
+#define CGU_USB_PHY0_CLK        CLK_ID(0x1e)
+#define  USB_PHY0_CGU_OSCIN_CLK     CLK_SEL(0x0)
+
+#define CGU_AUDIO_300M          CLK_ID(0x1f)
+#define  AUDIO_300M_CLK_AUDIO_DIG   CLK_SEL(0x0)
+
+#define CGU_AUDIO_ADC_CLK       CLK_ID(0x20)
+
+#define CGU_GMAC_CORE_CLK       CLK_ID(0x21)
+#define  GMAC_CORE_CGU_OSCIN_CLK    CLK_SEL(0x0)
+#define  GMAC_CORE_FIX_PLL_CLK500   CLK_SEL(0x1)
+#define  GMAC_CORE_FIX_PLL_CLK1000  CLK_SEL(0x2)
+
+#define CGU_GMAC_PHY_CLK        CLK_ID(0x22)
+#define  GMAC_PHY_CGU_OSCIN_CLK     CLK_SEL(0x0)
+#define  GMAC_PHY_FIX_PLL_CLK500    CLK_SEL(0x1)
+#define  GMAC_PHY_FIX_PLL_CLK1000   CLK_SEL(0x2)
+
+#define CGU_HDECOMP_CLK         CLK_ID(0x23)
+#define  HDECOMP_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  HDECOMP_FIX_PLL_CLK666     CLK_SEL(0x1)
+#define  HDECOMP_FIX_PLL_CLK500     CLK_SEL(0x2)
+#define  HDECOMP_FIX_PLL_CLK400     CLK_SEL(0x3)
+#define  HDECOMP_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  HDECOMP_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  HDECOMP_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  HDECOMP_AUDIO_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_EFUSE_CLK           CLK_ID(0x24)
+#define  EFUSE_CGU_OSCIN_CLK        CLK_SEL(0x0)
+#define  EFUSE_FIX_PLL_CLK100       CLK_SEL(0x1)
+#define  EFUSE_FIX_PLL_CLK400       CLK_SEL(0x2)
+#define  EFUSE_FIX_PLL_CLK333       CLK_SEL(0x3)
+#define  EFUSE_FIX_PLL_CLK250       CLK_SEL(0x4)
+
+#define CGU_SENSOR_MCLK0        CLK_ID(0x25)
+#define  SENSOR0_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  SENSOR0_PIXEL_PLL_CLK1     CLK_SEL(0x1)
+#define  SENSOR0_PIXEL_PLL_CLK2     CLK_SEL(0x2)
+#define  SENSOR0_PIXEL_PLL_CLK3     CLK_SEL(0x3)
+#define  SENSOR0_PIXEL_PLL_CLK4     CLK_SEL(0x4)
+#define  SENSOR0_PIXEL_PLL_CLK      CLK_SEL(0x5)
+
+#define CGU_SENSOR_MCLK1        CLK_ID(0x26)
+#define  SENSOR1_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  SENSOR1_PIXEL_PLL_CLK1     CLK_SEL(0x1)
+#define  SENSOR1_PIXEL_PLL_CLK2     CLK_SEL(0x2)
+#define  SENSOR1_PIXEL_PLL_CLK3     CLK_SEL(0x3)
+#define  SENSOR1_PIXEL_PLL_CLK4     CLK_SEL(0x4)
+#define  SENSOR1_PIXEL_PLL_CLK      CLK_SEL(0x5)
+
+#define CGU_SENSOR_MCLK2        CLK_ID(0x27)
+#define  SENSOR2_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  SENSOR2_PIXEL_PLL_CLK1     CLK_SEL(0x1)
+#define  SENSOR2_PIXEL_PLL_CLK2     CLK_SEL(0x2)
+#define  SENSOR2_PIXEL_PLL_CLK3     CLK_SEL(0x3)
+#define  SENSOR2_PIXEL_PLL_CLK4     CLK_SEL(0x4)
+#define  SENSOR2_PIXEL_PLL_CLK      CLK_SEL(0x5)
+
+#define CGU_DVP_PATTERN_CLK       CLK_ID(0x28)
+#define  DVP_ADC_PLL_CLK600     CLK_SEL(0x0)
+#define  DVP_PIXEL_PLL_CLK1     CLK_SEL(0x1)
+#define  DVP_PIXEL_PLL_CLK2     CLK_SEL(0x2)
+#define  DVP_PIXEL_PLL_CLK3     CLK_SEL(0x3)
+#define  DVP_PIXEL_PLL_CLK4     CLK_SEL(0x4)
+#define  DVP_FIX_PLL_CLK1000    CLK_SEL(0x5)
+#define  DVP_FIX_PLL_CLK666     CLK_SEL(0x6)
+#define  DVP_MIPI_TX_PLL_DIV2   CLK_SEL(0x7)
+
+#define CGU_DVP_SUB_1_2X_PIX_CLK    CLK_ID(0x29)
+#define  DVP_ADC_PLL_CLK600     CLK_SEL(0x0)
+#define  DVP_PIXEL_PLL_CLK1     CLK_SEL(0x1)
+#define  DVP_PIXEL_PLL_CLK2     CLK_SEL(0x2)
+#define  DVP_PIXEL_PLL_CLK3     CLK_SEL(0x3)
+#define  DVP_PIXEL_PLL_CLK4     CLK_SEL(0x4)
+#define  DVP_FIX_PLL_CLK1000    CLK_SEL(0x5)
+#define  DVP_FIX_PLL_CLK666     CLK_SEL(0x6)
+#define  DVP_MIPI_TX_PLL_DIV2   CLK_SEL(0x7)
+
+#define CGU_NUC_CLK         CLK_ID(0x2a)
+#define  NUC_ADC_PLL_CLK600     CLK_SEL(0x0)
+#define  NUC_PIXEL_PLL_CLK1     CLK_SEL(0x1)
+#define  NUC_PIXEL_PLL_CLK2     CLK_SEL(0x2)
+#define  NUC_PIXEL_PLL_CLK3     CLK_SEL(0x3)
+#define  NUC_PIXEL_PLL_CLK4     CLK_SEL(0x4)
+#define  NUC_FIX_PLL_CLK666     CLK_SEL(0x5)
+#define  NUC_FIX_PLL_CLK500     CLK_SEL(0x6)
+#define  NUC_MIPI_TX_PLL_DIV2   CLK_SEL(0x7)
+
+#define CGU_SCGMAC_PTP_CLK      CLK_ID(0x2b)
+#define  SCGMAC_PTP_CGU_OSCIN_CLK   CLK_SEL(0x0)
+#define  SCGMAC_PTP_FIX_PLL_CLK1000 CLK_SEL(0x1)
+#define  SCGMAC_PTP_FIX_PLL_CLK500  CLK_SEL(0x2)
+#define  SCGMAC_PTP_FIX_PLL_CLK250  CLK_SEL(0x3)
+
+#define CGU_SCGMAC_RGMIITX_CLK      CLK_ID(0x2c)
+#define  SCGMAC_RGMIITX_CGU_OSCIN_CLK   CLK_SEL(0x0)
+#define  SCGMAC_RGMIITX_FIX_PLL_CLK1000 CLK_SEL(0x1)
+#define  SCGMAC_RGMIITX_FIX_PLL_CLK500  CLK_SEL(0x2)
+#define  SCGMAC_RGMIITX_FIX_PLL_CLK250  CLK_SEL(0x3)
+#define  SCGMAC_RGMIITX_ADC_PLL_CLK25   CLK_SEL(0x4)
+#define  SCGMAC_RGMIITX_ADC_PLL_CLK20   CLK_SEL(0x5)
+
+#define CGU_SCGMAC_MDC_CLK      CLK_ID(0x2d)
+#define  SCGMAC_MDC_CGU_OSCIN_CLK   CLK_SEL(0x0)
+#define  SCGMAC_MDC_FIX_PLL_CLK250  CLK_SEL(0x1)
+#define  SCGMAC_MDC_FIX_PLL_CLK125  CLK_SEL(0x2)
+#define  SCGMAC_MDC_ADC_PLL_CLK50   CLK_SEL(0x3)
+#define  SCGMAC_MDC_ADC_PLL_CLK25   CLK_SEL(0x4)
+#define  SCGMAC_MDC_ADC_PLL_CLK20   CLK_SEL(0x5)
+
+#define CGU_NPU_CLK         CLK_ID(0x2e)
+#define CGU_NPU_CLK_PRE_A   CLK_ID(0x2f)
+#define CGU_NPU_CLK_PRE_B   CLK_ID(0x30)
+#define CGU_NPU_ACLK        CLK_ID(0x31)
+#define  NPU_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  NPU_FIX_PLL_CLK800     CLK_SEL(0x1)
+#define  NPU_FIX_PLL_CLK666     CLK_SEL(0x2)
+#define  NPU_FIX_PLL_CLK500     CLK_SEL(0x3)
+#define  NPU_FIX_PLL_CLK400     CLK_SEL(0x4)
+#define  NPU_ADC_PLL_CLK600     CLK_SEL(0x5)
+#define  NPU_ADC_PLL_CLK400     CLK_SEL(0x6)
+#define  NPU_PIXEL_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_IFC_CLK         CLK_ID(0x32)
+#define  IFC_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  IFC_FIX_PLL_CLK500     CLK_SEL(0x1)
+#define  IFC_FIX_PLL_Clk400     CLK_SEL(0x2)
+#define  IFC_FIX_PLL_CLK333     CLK_SEL(0x3)
+#define  IFC_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  IFC_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  IFC_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  IFC_AUDIO_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_EIS_CLK         CLK_ID(0x33)
+#define  EIS_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  EIS_FIX_PLL_CLK500     CLK_SEL(0x1)
+#define  EIS_FIX_PLL_Clk400     CLK_SEL(0x2)
+#define  EIS_FIX_PLL_CLK333     CLK_SEL(0x3)
+#define  EIS_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  EIS_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  EIS_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  EIS_AUDIO_PLL_CLK      CLK_SEL(0x7)
+
+#define CGU_SCALER_CLK          CLK_ID(0x34)
+#define  SCALER_CGU_OSCIN_CLK       CLK_SEL(0x0)
+#define  SCALER_FIX_PLL_CLK500      CLK_SEL(0x1)
+#define  SCALER_FIX_PLL_Clk400      CLK_SEL(0x2)
+#define  SCALER_FIX_PLL_CLK333      CLK_SEL(0x3)
+#define  SCALER_ADC_PLL_CLK600      CLK_SEL(0x4)
+#define  SCALER_ADC_PLL_CLK400      CLK_SEL(0x5)
+#define  SCALER_PIXEL_PLL_CLK       CLK_SEL(0x6)
+#define  SCALER_AUDIO_PLL_CLK       CLK_SEL(0x7)
+
+#define CGU_GEN_CLK         CLK_ID(0x35)
+#define  GEN_FIX_PLL_CLK500     CLK_SEL(0x0)
+#define  GEN_FIX_PLL_CLK100     CLK_SEL(0x1)
+#define  GEN_SD0_FIX_CLK        CLK_SEL(0x2)
+#define  GEN_ADC_PLL_CLK600     CLK_SEL(0x3)
+#define  GEN_ADC_PLL_CLK25      CLK_SEL(0x4)
+#define  GEN_AUDIO_PLL_CLK      CLK_SEL(0x5)
+#define  GEN_PIXEL_PLL_CLK      CLK_SEL(0x6)
+#define  GEN_PIXEL_PLL_CLK1     CLK_SEL(0x7)
+#define  GEN_CLK_AUDIO_DIG      CLK_SEL(0x8)
+#define  GEN_MIPI_TX_PLL_DIV2   CLK_SEL(0x9)
+#define  GEN_CGU_OSCIN_CLK      CLK_SEL(0xa)
+#define  GEN_TST_PLL_DDR        CLK_SEL(0xb)
+
+#define CGU_SCAN_CLK_60M        CLK_ID(0x36)
+#define CGU_SCAN_CLK_100M       CLK_ID(0x37)
+#define CGU_SCAN_CLK_150M       CLK_ID(0x38)
+#define CGU_SCAN_CLK_300M       CLK_ID(0x39)
+#define CGU_SCAN_CLK_480M       CLK_ID(0x3a)
+#define CGU_SCAN_CLK_2400M      CLK_ID(0x3b)
+#define CGU_SCAN_CLK_I2S        CLK_ID(0x3c)
+#define MIPI_TX_PLL_ATE_OUT_CLK CLK_ID(0x3d)
+#define AUDIO_PLL_ATE_OUT_CLK   CLK_ID(0x3e)
+#define PIXEL_PLL_ATE_OUT_CLK   CLK_ID(0x3f)
+#define FIX_PLL_ATE_OUT_CLK     CLK_ID(0x40)
+#define ADC_PLL_ATE_OUT_CLK     CLK_ID(0x41)
+
+#define CGU_CPU_CLK         CLK_ID(0x42)
+#define CGU_CPU_CLK_PRE     CLK_ID(0x43)
+#define CGU_CPU_CLK_PRE_A   CLK_ID(0x44)
+#define CGU_CPU_CLK_PRE_B   CLK_ID(0x45)
+#define  CPU_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  CPU_FIX_PLL_CLK1000    CLK_SEL(0x1)
+#define  CPU_FIX_PLL_CLK800     CLK_SEL(0x2)
+#define  CPU_FIX_PLL_CLK666     CLK_SEL(0x3)
+#define  CPU_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  CPU_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  CPU_PIXEL_PLL_CLK      CLK_SEL(0x6)
+
+#define CGU_CS_DBG_CLK             CLK_ID(0x46)
+#define  CPU_CGU_OSCIN_CLK      CLK_SEL(0x0)
+#define  CPU_FIX_PLL_CLK1000    CLK_SEL(0x1)
+#define  CPU_FIX_PLL_CLK800     CLK_SEL(0x2)
+#define  CPU_FIX_PLL_CLK666     CLK_SEL(0x3)
+#define  CPU_ADC_PLL_CLK600     CLK_SEL(0x4)
+#define  CPU_ADC_PLL_CLK400     CLK_SEL(0x5)
+#define  CPU_PIXEL_PLL_CLK      CLK_SEL(0x6)
+
+#define CLK_ENABLE          CLK_GATE(1)
+#define CLK_DISABLE         CLK_GATE(0)
+
+#define CGU_CLK_NUM         71
+
+/****** POWER *****************/
+#define PWR_CORE1           0x01000000
+#define PWR_VISION          0x02000000
+#define PWR_NPU_CORE            0x03000000
+#define PWR_NPU_TOP         0x04000000
+#define PWR_DLA             0x05000000
+#define PWR_VENC            0x06000000
+
+#define PWR_NUM             6
+
+#define PWR_ON              0x00100000
+#define PWR_OFF             0x00000000
+
+#define PWR_ID_MASK         0xff000000
+#define PWR_GATE_MASK           0x00f00000
+
+#endif

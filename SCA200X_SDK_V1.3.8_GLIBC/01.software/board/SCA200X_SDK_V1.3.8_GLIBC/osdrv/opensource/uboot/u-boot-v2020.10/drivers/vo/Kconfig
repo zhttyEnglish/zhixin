@@ -1,0 +1,9 @@
+#menu "VO Support"
+
+config VO
+	bool "smartchip vo driver"
+	default y
+	help
+		vo driver
+
+#endmenu # menu "VO Support"

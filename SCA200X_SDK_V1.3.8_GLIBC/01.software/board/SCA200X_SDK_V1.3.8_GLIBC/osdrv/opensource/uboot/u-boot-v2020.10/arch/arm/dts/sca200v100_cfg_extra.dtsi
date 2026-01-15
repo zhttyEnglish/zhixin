@@ -1,0 +1,22 @@
+#include <dt-bindings/gpio/gpio.h>
+
+&gpio_keys {
+	button@0 {
+		label = "Uboot upgrade";
+		gpios = <&gpio0_a 5 GPIO_ACTIVE_LOW>;
+	};
+};
+
+&soc {
+	vbus_regulator0: regulator@0 {
+		gpio = <&gpio1_b 5 GPIO_ACTIVE_HIGH>;
+	};
+
+	vbus_regulator1: regulator@1 {
+		gpio = <&gpio1_b 6 GPIO_ACTIVE_HIGH>;
+	};
+
+	vbus_regulator2: regulator@2 {
+		gpio = <&gpio1_b 7 GPIO_ACTIVE_HIGH>;
+	};
+};

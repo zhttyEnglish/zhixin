@@ -1,0 +1,93 @@
+/*
+ * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
+ *
+ * Minimal dts file for the MSI Primo81 for u-boot only
+ *
+ * SPDX-License-Identifier:     GPL-2.0+ or X11
+ */
+
+/dts-v1/;
+
+#include "smartchip-sca200v200.dtsi"
+#include "smartchip-sca200v100-ddr4.dtsi"
+//#include "smartchip-sca200v100-ddr3.dtsi"
+//#include "sca200v200_cfg_ddr_user.dtsi"
+#include "sca200v200_cfg_clock.dtsi"
+#include "sca200v200_cfg_pin_bd2.dtsi"
+#include "sca200v200_cfg_extra.dtsi"
+
+/ {
+	model = "SmartChip sca200v200 demo board2";
+	compatible = "smartchip, smartx-demo";
+
+	aliases {
+		console = &uart0;
+		serial0 = &uart0;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+};
+
+&dmc {
+	reg = <0x0C000000 0x02000000    // ddr_phy_base
+		0x0E000000 0x00010000    // ddr_ctrl_base
+		0x0E010000 0x00010000    // ddr_reg_base
+		0x0E020000 0x00010000    // ddr_mon_base
+		0x0E030000 0x00010000    // axi_mon0_base
+		0x0E040000 0x00010000    // axi_mon1_base
+		0x0E050000 0x00010000>;  // axi_mon2_base
+
+	user-type = <0>; //0:ddr4
+	user-density = <256>; // 256Mx16bit
+	/* sca200v100 16bit|32bit */
+	/* sca200v200 16bit only */
+	user-width = <USER_MODIFY_WIDTH_16BIT>; // 1:16bit; 2:32bit;
+	user-freq = <2400>; // 2400M
+};
+
+&uart0 {
+	u-boot,dm-pre-reloc;
+	status = "okay";
+};
+
+&emmc {
+	u-boot,dm-pre-reloc;
+//	max-frequency = <50000000>;
+	status = "okay";
+};
+
+&sdmmc0 {
+	u-boot,dm-pre-reloc;
+	max-frequency = <50000000>;
+	fifo-depth = <128>;
+	bus-width = <1>;
+	status = "okay";
+};
+
+&enet0 {
+	status = "okay";
+};
+
+&usb_otg0 {
+	vbus-supply = <&vbus_regulator0>;
+	dr_mode = "host";
+	status = "okay";
+};
+
+&usb_device0 {
+	status = "okay";
+};
+
+&wdt0 {
+	u-boot,dm-pre-reloc;
+	status = "disabled";
+};
+
+#if 0
+&gpio_reboot {
+	status = "okay";
+};
+#endif
