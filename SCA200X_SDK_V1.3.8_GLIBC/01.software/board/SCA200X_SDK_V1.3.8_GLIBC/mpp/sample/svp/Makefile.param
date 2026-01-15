@@ -1,0 +1,22 @@
+# mpp/Makefile.param
+export PARAM_FILE := ../../../Makefile.param
+include $(PARAM_FILE)
+
+# mpp/sample/common
+COMMON_DIR := ../../common
+AUDIO_ADP_DIR := ../../audio/adp
+
+# mpp/sample/Makefile.param
+include ../../Makefile.param
+
+ifeq ($(MPI_SO_FLAG), y)
+  ## use libxx.so
+  MPI_LDFLAGS += -lnpu
+  MPI_LDFLAGS += -lrcu
+else
+  ## use libxx.a
+  MPI_LIBS += $(REL_LIB)/libnpu.a
+  MPI_LIBS += $(REL_LIB)/librcu.a
+endif
+MPI_LIBS += $(PWD)/npu/libcjson.a
+

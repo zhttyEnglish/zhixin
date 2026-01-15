@@ -1,0 +1,34 @@
+# mpp/sample/svp/Makefile.param
+include ../Makefile.param
+
+###########SMP SRCS & INC ############
+SMP_SRCS := $(wildcard ../common/*.c)
+SMP_SRCS += $(wildcard ./sample/*.c)
+SMP_SRCS += $(wildcard ./sample_npu_software/*.c)
+
+SMP_CXXSRCS := $(wildcard ../common/*.cpp)
+SMP_CXXSRCS += $(wildcard sample_npu_software/*.cpp)
+
+# 定义目标库文件名
+LIB_TARGET := liblenovo_alg.a
+
+# 定义对象文件
+OBJS := $(SMP_SRCS:.c=.o) $(SMP_CXXSRCS:.cpp=.o)
+
+# 编译规则
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# 创建静态库
+$(LIB_TARGET): $(OBJS)
+	ar rcs $@ $^
+
+# 清理规则
+clean:
+	rm -f $(OBJS) $(LIB_TARGET)
+
+# 包含其他Makefile
+include ../../$(ARM_ARCH)_$(OSTYPE).mak

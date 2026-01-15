@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "limits": "c",
+        "pthread.h": "c",
+        "app_rtsp_client.h": "c",
+        "hal_vdec.h": "c",
+        "mpi_vb.h": "c",
+        "sc_common.h": "c"
+    }
+}

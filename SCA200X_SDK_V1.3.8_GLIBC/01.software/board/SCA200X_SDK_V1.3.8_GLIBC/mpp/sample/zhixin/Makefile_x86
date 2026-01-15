@@ -1,0 +1,13 @@
+CC=gcc
+CFLAGS=-I.
+DEPS = ./*.h
+OBJ = main.o handle_recv.o upload_data.o dictionary.o iniparser.o handle_config.o upload_image.o tcp.o algoresult.o cJSON.o
+
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS) -lm -lpthread
+
+main: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) -lm -lpthread
+
+clean:
+	rm -r *.o
