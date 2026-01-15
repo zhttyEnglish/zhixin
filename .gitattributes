@@ -4,3 +4,6 @@ update.tar.xz filter=lfs diff=lfs merge=lfs -text
 ubuntu_img/linux.ext4.sparse.rar filter=lfs diff=lfs merge=lfs -text
 SCA200X_SDK_V1.3.8_GLIBC/01.software/board/SCA200X_SDK_V1.3.8_GLIBC/package/osdrv.tgz filter=lfs diff=lfs merge=lfs -text
 SCA200X_SDK_V1.3.8_GLIBC/01.software/board/SCA200X_SDK_V1.3.8_GLIBC/package/mpp.tgz filter=lfs diff=lfs merge=lfs -text
+SCA200X_SDK_V1.3.8_GLIBC/01.software/board/SCA200X_SDK_V1.3.8_GLIBC/mpp/sample/svp/npu/data/npu_model/detection/yolov3_caffe_yuv420p.npubin filter=lfs diff=lfs merge=lfs -text
+SCA200X_SDK_V1.3.8_GLIBC/01.software/board/SCA200X_SDK_V1.3.8_GLIBC/mpp/sample/svp/npu/data/npu_model/detection/yolov3_caffe.npubin filter=lfs diff=lfs merge=lfs -text
+SCA200X_SDK_V1.3.8_GLIBC/01.software/board/SCA200X_SDK_V1.3.8_GLIBC/mpp/sample/svp/npu/data/npu_model/classification/caffe_callback.npubin filter=lfs diff=lfs merge=lfs -text
