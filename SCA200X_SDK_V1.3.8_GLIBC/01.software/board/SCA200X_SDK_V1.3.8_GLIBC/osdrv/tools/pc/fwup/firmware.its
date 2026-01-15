@@ -1,0 +1,68 @@
+/*
+ * Automatic software update for Firmware
+ * Make sure the flashing addresses ('load' prop) is correct for your board!
+ */
+
+/dts-v1/;
+
+/ {
+	description = "smartchip firmware";
+	#address-cells = <1>;
+
+	images {
+		update-1 {
+			description = "boot";
+			data = /incbin/("images/boot.img");
+			compression = "none";
+			type = "standalone";
+			arch = "arm64";
+
+			load = <0x00000000>;
+			entry = <0x1>;
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		update-2 {
+			description = "kernel";
+			data = /incbin/("images/kernel.img");
+			compression = "none";
+			type = "kernel";
+			arch = "arm64";
+			os = "linux";
+
+			load = <0x800>;
+			entry = <0x0>;
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		update-3 {
+			description = "kernel.dtb";
+			data = /incbin/("images/kernel.dtb");
+			compression = "none";
+			type = "standalone";
+			arch = "arm64";
+			os = "linux";
+
+			load = <0x4800>;
+			entry = <0x0>;
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		update-4 {
+			description = "rootfs";
+			data = /incbin/("images/linux.ext4.sparse.img");
+			compression = "none";
+			type = "ramdisk";
+			arch = "arm64";
+
+			load = <0x4c00>;
+			entry = <0x0>;
+			hash-1 {
+				algo = "md5";
+			};
+		};
+	};
+};
