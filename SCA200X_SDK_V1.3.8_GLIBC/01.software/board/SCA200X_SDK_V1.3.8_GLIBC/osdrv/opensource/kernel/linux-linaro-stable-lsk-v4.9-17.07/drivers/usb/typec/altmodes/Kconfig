@@ -1,0 +1,22 @@
+
+menu "USB Type-C Alternate Mode drivers"
+
+config TYPEC_DP_ALTMODE
+	tristate "DisplayPort Alternate Mode driver"
+	help
+	  DisplayPort USB Type-C Alternate Mode allows DisplayPort
+	  displays and adapters to be attached to the USB Type-C
+	  connectors on the system.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called typec_displayport.
+
+config TYPEC_DP_CORE
+	tristate "Smartx USB TYPE C DP PHY Driver"
+	depends on USB
+	depends on TYPEC_TCPM
+	help
+	  Enable this to support Smartx USB phy. This driver provides
+	  USB 3.0 TYPE C PHY that is part of the Smartx SOC.
+
+endmenu

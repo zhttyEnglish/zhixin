@@ -1,0 +1,4 @@
+config SMARTCHIP_MEMPOOL
+	bool "SmartChip mempool driver"
+	default y
+

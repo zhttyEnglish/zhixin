@@ -1,0 +1,210 @@
+/*
+ * Copyright 2015 SmartChip Co., Ltd.
+ */
+
+/dts-v1/;
+#include "smartchip-sca200v200.dtsi"
+#include "smartchip-sca200v200-memory.dtsi"
+
+/ {
+	model = "SmartChip, Sca200v200 Development Board1";
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+};
+
+&uart2 {
+	status = "okay";
+};
+
+&uart3 {
+	status = "okay";
+};
+
+&uart4 {
+	status = "okay";
+};
+
+&vbus_regulator0 {
+	compatible = "regulator-fixed";
+	regulator-name = "usb_otg0_vbus";
+	regulator-min-microvolt = <5000000>;
+	regulator-max-microvolt = <5000000>;
+	gpio = <&portg0 8 GPIO_ACTIVE_HIGH>;
+	enable-active-high;
+};
+
+&usb_otg0 {
+	dr_mode = "otg";
+	vbus-supply = <&vbus_regulator0>;
+	status = "okay";
+};
+
+&wdt0 {
+	status = "disabled";
+};
+
+&rtc0 {
+	status = "disabled";
+};
+
+&pwm0 {
+	status = "disabled";
+};
+
+&pwm1 {
+	status = "disabled";
+};
+
+&tzc{
+	status = "disabled";
+};
+
+&spim0 {
+	status = "disabled";
+};
+
+&spim1 {
+	status = "disabled";
+};
+
+&spis0 {
+	status = "disabled";
+};
+
+&spis1 {
+	status = "disabled";
+};
+
+&i2c0 {
+	status = "okay";
+
+	pmic0: da9062@58 {
+		status = "disable";
+		compatible = "dlg,da9062";
+		reg = <0x58>;
+		interrupt-parent = <&porta0>;
+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-controller;
+		//gpios = <&portc1 6 GPIO_ACTIVE_LOW>;
+
+		rtc {
+			compatible = "dlg,da9062-rtc";
+		};
+
+		watchdog {
+			compatible = "dlg,da9062-watchdog";
+		};
+
+		thermal {
+			compatible = "dlg,da9062-thermal";
+			polling-delay-passive = <3000>;
+		};
+
+		regulators {
+			DA9062_BUCK1: buck1 {
+				regulator-name = "BUCK1";
+				regulator-min-microvolt = <300000>;
+				regulator-max-microvolt = <1570000>;
+				regulator-min-microamp = <500000>;
+				regulator-max-microamp = <2000000>;
+				regulator-boot-on;
+			};
+			DA9062_BUCK2: buck2 {
+				regulator-name = "BUCK2";
+				regulator-min-microvolt = <300000>;
+				regulator-max-microvolt = <1570000>;
+				regulator-min-microamp = <500000>;
+				regulator-max-microamp = <2000000>;
+				regulator-boot-on;
+			};
+			DA9062_LDO3: ldo3 {
+				regulator-name = "LDO_3";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-boot-on;
+			};
+		};
+	};
+};
+
+&i2c1 {
+	status = "okay";
+};
+
+&i2c2 {
+	status = "okay";
+};
+
+&i2c3 {
+	status = "okay";
+};
+
+&i2c4 {
+	status = "disabled";
+};
+
+&vqmmc_sdhci {
+	gpios = <&portc0 25 GPIO_ACTIVE_HIGH>;
+};
+
+&emmc {
+	/delete-property/voltage-ranges;
+	/delete-property/no-1-8-v;
+	vqmmc-supply = <&vqmmc_sdhci>;
+	mmc-hs200-1_8v;
+	status = "okay";
+};
+
+&vqmmc_sdmmc0 {
+	gpios = <&porta0 14 GPIO_ACTIVE_HIGH>;
+	gpios-states = <1>;
+	states = <3300000 1
+		  1800000 0>;
+};
+
+&sdmmc0 {
+	vqmmc-supply = <&vqmmc_sdmmc0>;
+	status = "okay";
+};
+
+&sdmmc1 {
+	/delete-property/sd-uhs-sdr12;
+	/delete-property/sd-uhs-sdr25;
+	/delete-property/sd-uhs-sdr50;
+	/delete-property/sd-uhs-sdr104;
+//	status = "okay";
+};
+
+&mdio {
+	status = "okay";
+
+	phy0: ethernet-phy@1 {
+		status = "okay";
+	};
+};
+
+&gmac {
+	status = "okay";
+};
+
+&qspi {
+	status = "disabled";
+};
+
+&sec_uart {
+	status = "okay";
+};
+
+&sec_timer {
+	status = "okay";
+};
+
+&sec_wdt {
+	status = "okay";
+};

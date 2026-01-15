@@ -1,0 +1,5 @@
+config SMARTCHIP_TZC
+	bool "SmartChip tzc driver"
+	default y
+
+

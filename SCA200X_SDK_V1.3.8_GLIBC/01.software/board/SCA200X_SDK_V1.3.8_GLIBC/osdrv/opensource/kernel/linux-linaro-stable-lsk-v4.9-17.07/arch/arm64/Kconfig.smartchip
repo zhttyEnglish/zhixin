@@ -1,0 +1,18 @@
+choice
+	prompt "smartchip type"
+	depends on ARCH_SMARTCHIP
+	default ARCH_SCA200V100
+	help
+	  smartchip soc type select
+
+config ARCH_SCA200V100
+	bool "smartchip sca200v100"
+	help
+	  This enalbes support for sca200v100
+
+config ARCH_SCA200V200
+	bool "smartchip sca200v200"
+	help
+	  This enalbes support for sca200v200
+
+endchoice

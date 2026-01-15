@@ -1,0 +1,18 @@
+menuconfig ARCH_SMARTCHIP
+	bool "SmartChip SoCs"  # if ARCH_MULTI_V7
+	select ARCH_REQUIRE_GPIOLIB
+	select ARCH_HAS_RESET_CONTROLLER
+	select CLKSRC_MMIO
+	select GENERIC_IRQ_CHIP
+	select PINCTRL
+	select RESET_CONTROLLER
+	select INLINE_SPIN_UNLOCK_IRQ
+if ARCH_SMARTCHIP
+
+config MACH_SMARTX
+	bool "SmartChip Smartx SoCs support"
+	default ARCH_SMARTCHIP
+	select ARM_GIC
+	select DW_APB_TIMER_OF
+
+endif

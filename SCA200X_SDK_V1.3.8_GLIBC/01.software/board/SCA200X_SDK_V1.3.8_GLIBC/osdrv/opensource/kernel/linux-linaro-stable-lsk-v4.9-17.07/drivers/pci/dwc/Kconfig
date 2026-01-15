@@ -1,0 +1,56 @@
+menu "DesignWare PCI Core Support"
+
+config PCIE_DW
+    bool
+
+config PCIE_DW_HOST
+    bool
+    depends on PCI
+    depends on PCI_MSI_IRQ_DOMAIN
+    select PCIE_DW
+
+config PCIE_DW_EP
+    bool
+    depends on PCI_ENDPOINT
+    select PCIE_DW
+
+config PCIE_DW_PLAT
+	bool "Platform bus based DesignWare PCIe Controller"
+	depends on PCI
+	depends on PCI_MSI_IRQ_DOMAIN
+	select PCIE_DW_HOST
+	---help---
+	 This selects the DesignWare PCIe controller support. Select this if
+	 you have a PCIe controller on Platform bus.
+
+	 If you have a controller with this interface, say Y or M here.
+
+	 If unsure, say N.
+
+config PCI_SCA200V100
+    bool "AR PCIe controller"
+    depends on (PCI && PCI_MSI_IRQ_DOMAIN) || PCI_ENDPOINT
+    help
+        SmartChip DUAL role PCIe controller. In order to enable host-specific features PCI_SCA200V100_HOST must be selected and in order to enable device-specific features PCI_SCA200V100_EP must be selected. This uses the Designware core.
+
+if PCI_SCA200V100
+
+config PCI_SCA200V100_HOST
+    bool "PCI SCA200V100 Host Mode"
+    depends on PCI
+    depends on PCI_MSI_IRQ_DOMAIN
+    select PCIE_DW_HOST
+    default y
+    help
+        Enables support for the PCIe controller in the SCA200V100 SoC to work in host mode.
+
+config PCI_SCA200V100_EP
+    bool "PCI SCA200V100 Endpoint Mode"
+    depends on PCI_ENDPOINT
+    select PCIE_DW_EP
+    help
+        Enables support for the PCIe controller in the SCA200V100 SoC to work in endpoint mode.
+
+endif
+
+endmenu

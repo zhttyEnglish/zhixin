@@ -1,0 +1,194 @@
+/*
+ * Copyright 2015 SmartChip Co., Ltd.
+ */
+
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/sca200v100_common.h>
+#include "smartchip-sca200v100-memory.dtsi"
+#include "smartchip-sca200v100.dtsi"
+
+#define USE_RTOS 0
+
+/ {
+	model = "SmartChip, Smartx Development Board2 v1.0/v2.0";
+};
+
+&gpio_reboot {
+	status = "okay";
+};
+
+&gmac {
+	phy-mode = "rgmii-id";
+	status = "okay";
+};
+&phy0 {
+	max-speed = <1000>;
+};
+
+&can0 {
+	status = "okay";
+};
+&can1 {
+	status = "okay";
+};
+&can2 {
+	status = "okay";
+};
+&can3 {
+	status = "okay";
+};
+
+&uart0 {
+	status = "okay";
+};
+&uart1 {
+	status = "okay";
+};
+&uart2 {
+	status = "okay";
+};
+&uart3 {
+	status = "okay";
+};
+&uart4 {
+	status = "okay";
+};
+
+&i2c0 {
+	status = "okay";
+#if 0
+	ina_0v9@40 {
+		reg = <0x40>;
+		compatible = "ina220";
+		/* uOhm */
+		shunt-resistor = <10000>;
+	};
+	ina_1v2@4c {
+		reg = <0x42>;
+		compatible = "ina220";
+		shunt-resistor = <100000>;
+	};
+	ina_1v8@42 {
+		reg = <0x43>;
+		compatible = "ina220";
+		shunt-resistor = <100000>;
+	};
+#endif
+	gpio_pca9555@24 {
+		compatible = "nxp,pca9555";
+		reg = <0x24>;
+		status = "okay";
+	};
+
+};
+
+&i2c1 {
+	status = "okay";
+	ina_5v_sys@41 {
+		reg = <0x41>;
+		compatible = "ina220";
+		shunt-resistor = <100000>;
+	};
+	ina_5v@44 {
+		reg = <0x44>;
+		compatible = "ina220";
+		shunt-resistor = <100000>;
+	};
+};
+
+&spim0 {
+	status = "okay";
+};
+
+&spim1 {
+	status = "okay";
+};
+
+&spis0 {
+	status = "okay";
+};
+
+&spis1 {
+	status = "okay";
+};
+
+&sdmmc {
+	status = "okay";
+
+	slot@0 {
+		bus-width = <4>;
+		cap-sd-highspeed;
+		sd-uhs-sdr12;
+		sd-uhs-sdr25;
+		sd-uhs-sdr50;
+		sd-uhs-sdr104;
+
+		no-mmc;
+		no-sdio;
+		disable-wp;
+
+		status = "okay";
+	};
+
+	slot@1 {
+		bus-width = <4>;
+		cap-sd-highspeed;
+		sd-uhs-sdr12;
+		sd-uhs-sdr25;
+		sd-uhs-sdr50;
+		sd-uhs-sdr104;
+
+		no-mmc;
+		no-sdio;
+		status = "okay";
+	};
+
+	slot@2 {
+		bus-width = <4>;
+		cap-sd-highspeed;
+		sd-uhs-sdr12;
+		sd-uhs-sdr25;
+		sd-uhs-sdr50;
+		sd-uhs-sdr104;
+
+		no-mmc;
+		no-sdio;
+		disable-wp;
+
+		status = "okay";
+	};
+
+};
+
+&vbus_regulator0 {
+	gpio = <&gpio1_d 7 GPIO_ACTIVE_HIGH>;
+};
+/delete-node/ &vbus_regulator1;
+/delete-node/ &vbus_regulator2;
+
+&usb_otg0 {
+	vbus-supply = <&vbus_regulator0>;
+	//dr_mode = "otg";
+	dr_mode = "host";
+	status = "okay";
+};
+&usb_otg1 {
+	status = "okay";
+};
+&usb_otg2 {
+	status = "okay";
+};
+
+#if USE_RTOS
+/delete-node/ &cpu3;
+/delete-node/ &uart1;
+
+/{
+	aliases {
+		/delete-property/ serial1;
+	};
+};
+#endif
+

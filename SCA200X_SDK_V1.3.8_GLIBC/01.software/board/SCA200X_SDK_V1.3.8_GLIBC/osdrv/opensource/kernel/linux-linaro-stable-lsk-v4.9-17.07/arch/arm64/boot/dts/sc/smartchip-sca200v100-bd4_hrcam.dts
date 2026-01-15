@@ -1,0 +1,91 @@
+/*
+ * Copyright 2015 SmartChip Co., Ltd.
+ */
+
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/sca200v100_common.h>
+#include "smartchip-sca200v100-memory.dtsi"
+#include "smartchip-sca200v100.dtsi"
+
+/ {
+	model = "SmartChip, Smartx ipc Demo Board4 hrcam";
+};
+
+&gpio_reboot {
+	status = "disabled";
+};
+
+&gmac {
+	phy-mode = "rmii";
+	status = "okay";
+};
+&phy0 {
+	eee-broken-100tx;
+	hw-reset-linkup;
+	max-speed = <100>;
+};
+
+&uart0 {
+	status = "okay";
+};
+&uart1 {
+	/* PTZ */
+	status = "okay";
+};
+&uart2 {
+	/* for AF */
+	status = "okay";
+};
+&uart4 {
+	/* rs485 */
+	status = "okay";
+};
+
+&i2c0 {
+	/* sensor */
+	status = "okay";
+};
+&i2c1 {
+	/* sensor */
+	status = "okay";
+};
+&i2c2 {
+	/* g-sensor */
+	status = "okay";
+};
+&i2c3 {
+	/* atsha204a,rtc */
+	status = "okay";
+
+	rtc@51 {
+		reg = <0x51>;
+		compatible = "rtc,bm8563";
+	};
+};
+
+&rtc0 {
+	status = "disabled";
+};
+
+&sdmmc {
+	status = "okay";
+
+	slot@0 {
+		bus-width = <4>;
+		cap-sd-highspeed;
+		disable-wp;
+
+		no-mmc;
+		no-sdio;
+		status = "okay";
+	};
+};
+
+/delete-node/ &vbus_regulator0;
+/delete-node/ &vbus_regulator1;
+/delete-node/ &vbus_regulator2;
+&usb_otg0 {
+	status = "okay";
+};

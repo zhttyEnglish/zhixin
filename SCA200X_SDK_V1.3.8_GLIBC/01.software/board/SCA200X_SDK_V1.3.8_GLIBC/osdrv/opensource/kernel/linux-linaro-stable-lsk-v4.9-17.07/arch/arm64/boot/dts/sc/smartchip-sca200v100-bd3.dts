@@ -1,0 +1,96 @@
+/*
+ * Copyright 2015 SmartChip Co., Ltd.
+ */
+
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/sca200v100_common.h>
+#include "smartchip-sca200v100-memory.dtsi"
+#include "smartchip-sca200v100.dtsi"
+
+/ {
+	model = "SmartChip, Smartx face demo Board3";
+};
+
+&gpio_reboot {
+	status = "okay";
+};
+
+&gmac {
+	phy-mode = "rmii";
+	status = "okay";
+};
+&phy0 {
+	max-speed = <100>;
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+};
+&uart4 {
+	status = "okay";
+};
+&i2c0 {
+	status = "okay";
+};
+
+&i2c2 {
+	status = "okay";
+
+	gt911: touchscreen@5d {
+		compatible = "goodix,gt911";
+		reg = <0x5d>;
+		interrupt-parent = <&gpio1_a>;
+		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+		/* input irq: gpio1_5(pin173 func4) */
+		irq-gpios = <&gpio1_a 5 GPIO_ACTIVE_HIGH>;
+		/* output reset: gpio1_15(pin129 func0) */
+		reset-gpios = <&gpio1_b 7 GPIO_ACTIVE_HIGH>;
+
+		//touchscreen-swapped-x-y;
+	};
+};
+
+&spim0 {
+	status = "okay";
+};
+
+&spim1 {
+	status = "okay";
+};
+
+&spis0 {
+	status = "okay";
+};
+
+&spis1 {
+	status = "okay";
+};
+
+&sdmmc {
+	status = "okay";
+
+	slot@0 {
+		bus-width = <4>;
+		cap-sd-highspeed;
+		no-mmc;
+		no-sdio;
+		status = "okay";
+	};
+};
+
+/delete-node/ &vbus_regulator0;
+/delete-node/ &vbus_regulator1;
+/delete-node/ &vbus_regulator2;
+&usb_otg0 {
+	dr_mode = "host";
+	status = "okay";
+};
+&usb_otg1 {
+	status = "okay";
+};

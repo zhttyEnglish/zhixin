@@ -1,0 +1,16 @@
+/ {
+	reserved_memory: reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		//4M
+		cma@0x23000000 {
+			compatible="shared-dma-pool";
+			reg = <0 0x23000000 0 0x400000>;
+			reusable;
+			linux,cam-default;
+		};
+
+	};
+};

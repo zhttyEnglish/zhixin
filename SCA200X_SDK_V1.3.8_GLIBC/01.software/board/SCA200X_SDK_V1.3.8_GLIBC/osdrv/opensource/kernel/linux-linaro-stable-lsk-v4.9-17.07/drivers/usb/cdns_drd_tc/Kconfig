@@ -1,0 +1,51 @@
+config USB_CDNS_DRD_TC
+	tristate "Cadence USB DRD Core Support"
+	depends on USB && HAS_DMA
+	select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
+	help
+	  Say Y or M here if your system has a Dual Role SuperSpeed
+	  USB controller based on the Cadence USB3 IP Core.
+
+	  If you choose to build this driver is a dynamically linked
+	  module, the module will be called cdns_drd_tc.ko.
+
+if USB_CDNS_DRD_TC
+
+config USB_CDNS_MISC
+	bool "Additional miscellaneous device for ioctl"
+	depends on (USB=y || USB=USB_CDNS_DRD_TC)
+	help
+	  Select this if you want to send commands to driver
+	  using I/O control.
+
+config USB_CDNS_DRD_PCI
+  tristate "PCIe-based Platform for DRD"
+  depends on PCI && USB_CDNS_DRD_TC
+  default USB_CDNS_DRD_TC
+  help
+    If you're using the Cadence DRD IP with a PCIe, please say
+    'Y' or 'M' here.
+
+endif
+
+config USB_CDNS_GADGET
+  tristate "Cadence device controller"
+  depends on USB_GADGET
+  help
+    Say 'Y' or 'M' here to enable device controller functionality 
+    of the Cadence driver.
+
+if USB_CDNS_GADGET
+
+config USB_CDNS_HG_PCI
+  tristate "PCIe-based Platform for host and gadegt"
+  depends on PCI && USB_XHCI_HCD && USB_CDNS_GADGET
+  default USB_CDNS_GADGET
+  help
+    If you're using the Cadence Gadget IP with a PCIe, please say
+    'Y' or 'M' here.
+
+endif
+
+comment "Platform Glue Driver Support"
+

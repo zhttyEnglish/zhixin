@@ -1,0 +1,47 @@
+/ {
+	reserved_memory: reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		// 2M
+		icc_reserved: icc@0x22200000 {
+			compatible="icc-region";
+			reg = <0 0x22200000 0 0x200000>;
+		};
+
+		// 32M
+		rtos_reserved: rtos@0x22400000 {
+			reg = <0 0x22400000 0 0x2000000>;
+		};
+
+#if 0
+		// 32M
+		rcu_reserved: rcu@0x22400000 {
+			reg = <0 0x22400000 0 0x2000000>;
+		};
+
+		// 4M
+		system_heap_reserved: system_heap@0x24400000 {
+			compatible="ion-region";
+			reg = <0 0x24400000 0 0x400000>;
+		};
+#endif
+
+	};
+
+#if 0
+	ion_smartchip: ion-smartchip {
+		compatible = "smartchip,ion", "linux,ion";
+		ion-system-heap {
+			compatible = "smartchip,system", "linux,ion-heap-system";
+		};
+
+		ion-sys-heap-region {
+			compatible = "smartchip,carveout-linux-sys-heap","linux,ion-heap-carveout";
+			memory-region = <&system_heap_reserved>;
+		};
+	};
+#endif
+
+};

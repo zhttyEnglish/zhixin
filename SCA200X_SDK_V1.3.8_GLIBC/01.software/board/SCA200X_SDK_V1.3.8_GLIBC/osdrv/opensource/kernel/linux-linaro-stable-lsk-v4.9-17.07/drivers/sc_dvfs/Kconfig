@@ -1,0 +1,4 @@
+config SMARTCHIP_DVFS
+	tristate "DVFS for smartchip"
+	help
+	  Choose this option if you wish to use dvfs on smartchip Platform.

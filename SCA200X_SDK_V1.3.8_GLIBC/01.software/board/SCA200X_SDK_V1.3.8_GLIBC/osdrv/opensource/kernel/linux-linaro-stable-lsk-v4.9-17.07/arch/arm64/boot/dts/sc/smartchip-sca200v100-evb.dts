@@ -1,0 +1,304 @@
+/*
+ * Copyright 2015 SmartChip Co., Ltd.
+ */
+
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/sca200v100_common.h>
+#include "smartchip-sca200v100-memory.dtsi"
+#include "smartchip-sca200v100.dtsi"
+
+/ {
+	model = "SmartChip, Smartx Development Board1";
+};
+
+&gpio_reboot {
+	status = "okay";
+};
+
+&gmac {
+	phy-mode = "rgmii-id";
+	status = "okay";
+};
+&phy0 {
+	max-speed = <1000>;
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+};
+
+&uart2 {
+	status = "okay";
+};
+
+&uart3 {
+	status = "okay";
+};
+
+&uart4 {
+	status = "okay";
+};
+
+&vbus_regulator0 {
+	gpio = <&gpio1_b 5 GPIO_ACTIVE_HIGH>;
+};
+
+&vbus_regulator1 {
+	gpio = <&gpio1_b 6 GPIO_ACTIVE_HIGH>;
+};
+
+&vbus_regulator2 {
+	gpio = <&gpio1_b 7 GPIO_ACTIVE_HIGH>;
+};
+
+&usb_otg0 {
+	dr_mode = "peripheral";
+	vbus-supply = <&vbus_regulator0>;
+	status = "okay";
+};
+
+&usb_otg1 {
+	dr_mode = "host";
+	vbus-supply = <&vbus_regulator1>;
+	status = "okay";
+};
+
+&usb_otg2 {
+	dr_mode = "host";
+	vbus-supply = <&vbus_regulator2>;
+	status = "okay";
+};
+
+&wdt0 {
+	status = "okay";
+};
+
+&rtc0 {
+	status = "okay";
+};
+
+&pwm0 {
+	status = "okay";
+};
+
+&pwm1 {
+	status = "okay";
+};
+
+&tzc {
+	status = "disabled";
+};
+
+&spim0 {
+	status = "disabled";
+};
+
+&spim1 {
+	status = "okay";
+    num-cs = <1>;
+    cs-gpios = <&gpio3_b 3 0>;
+    spidev00: spidev00 {
+        #address-cells = <1>;
+        #size-cells = <1>;
+        compatible = "spidev";
+        reg = <0>;
+        spi-max-frequency = <20000000>;
+    };
+};
+
+&spis0 {
+	status = "disabled";
+};
+
+&spis1 {
+	status = "disabled";
+};
+
+&i2c0 {
+	status = "okay";
+
+	pmic0: da9062@58 {
+		status = "okay";
+		compatible = "dlg,da9062";
+		reg = <0x58>;
+		interrupt-parent = <&gpio2_a>;
+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-controller;
+		//gpios = <&gpio1_c 6 GPIO_ACTIVE_LOW>;
+
+		rtc {
+			compatible = "dlg,da9062-rtc";
+		};
+
+		watchdog {
+			compatible = "dlg,da9062-watchdog";
+		};
+
+		thermal {
+			compatible = "dlg,da9062-thermal";
+			polling-delay-passive = <3000>;
+		};
+
+		regulators {
+			DA9062_BUCK1: buck1 {
+				regulator-name = "BUCK1";
+				regulator-min-microvolt = <300000>;
+				regulator-max-microvolt = <1570000>;
+				regulator-min-microamp = <500000>;
+				regulator-max-microamp = <2000000>;
+				regulator-boot-on;
+			};
+			DA9062_BUCK2: buck2 {
+				regulator-name = "BUCK2";
+				regulator-min-microvolt = <300000>;
+				regulator-max-microvolt = <1570000>;
+				regulator-min-microamp = <500000>;
+				regulator-max-microamp = <2000000>;
+				regulator-boot-on;
+			};
+			DA9062_LDO3: ldo3 {
+				regulator-name = "LDO_3";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-boot-on;
+			};
+			DA9062_LDO4: ldo4 {
+				regulator-name = "LDO_4";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-boot-on;
+			};
+		};
+	};
+};
+
+&i2c1 {
+	status = "okay";
+};
+
+&i2c2 {
+	status = "okay";
+
+	mpu0_i2c: mpu6509@68 {
+		status = "okay";
+		compatible = "tdk,mpu6509";
+		reg = <0x68>;
+		interrupt-parent = <&gpio1_a>;
+		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-controller;
+	};
+};
+
+&i2c3 {
+	status = "okay";
+};
+
+&i2c4 {
+	status = "okay";
+};
+
+&emmc {
+//	/delete-property/voltage-ranges;
+//	/delete-property/no-1-8-v;
+	/delete-property/full-pwr-cycle;
+//	vqmmc-supply = <&DA9062_LDO4>;
+//	mmc-hs200-1_8v;
+	status = "okay";
+};
+
+&sdmmc {
+	status = "okay";
+
+	slot@0 {
+		vqmmc-supply = <&DA9062_LDO3>;
+
+		bus-width = <4>;
+		cap-sd-highspeed;
+		sd-uhs-sdr12;
+		sd-uhs-sdr25;
+		sd-uhs-sdr50;
+		sd-uhs-sdr104;
+		sd-uhs-ddr50;
+
+		no-mmc;
+		no-sdio;
+
+		status = "okay";
+	};
+	slot@2 {
+		fixed-1v8;
+
+		bus-width = <4>;
+		cap-sd-highspeed;
+		sd-uhs-sdr12;
+		sd-uhs-sdr25;
+		sd-uhs-sdr50;
+		sd-uhs-sdr104;
+		sd-uhs-ddr50;
+
+		cap-sdio-irq;
+
+		no-mmc;
+		no-sd;
+		non-removable;
+
+		status = "okay";
+	};
+};
+
+&qspi {
+	status = "okay";
+
+	flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <SPI_NOR_CS0>;
+		spi-max-frequency = <150000000>;
+	};
+	flash@1 {
+		compatible = "spi-nand";
+		reg = <SPI_NAND_CS0>;
+		spi-max-frequency = <150000000>;
+	};
+	flash@2 {
+		compatible = "jedec,spi-nor";
+		reg = <SPI_NOR_CS1>;
+		spi-max-frequency = <150000000>;
+	};
+	flash@3 {
+		compatible = "spi-nand";
+		reg = <SPI_NAND_CS1>;
+		spi-max-frequency = <150000000>;
+	};
+};
+
+/ {
+	gpio_keys {
+		compatible = "gpio-keys-polled";
+		poll-interval = <100>;
+		autorepeat = <1>;
+
+		button0 {
+			label = "GPIO Key 0";
+			linux,code = <105>;
+			gpios = <&gpio0_b 7 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	gpio_keys_int {
+		compatible = "gpio-keys";
+		autorepeat = <1>;
+
+		button0 {
+			label = "GPIO Key 0";
+			linux,code = <106>;
+			gpios = <&gpio0_a 5 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+};

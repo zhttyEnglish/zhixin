@@ -1,0 +1,4 @@
+config SMARTCHIP_ICC
+	tristate "Icc for smartchip"
+	help
+	  Choose this option if you wish to use icc on smartchip Platform.

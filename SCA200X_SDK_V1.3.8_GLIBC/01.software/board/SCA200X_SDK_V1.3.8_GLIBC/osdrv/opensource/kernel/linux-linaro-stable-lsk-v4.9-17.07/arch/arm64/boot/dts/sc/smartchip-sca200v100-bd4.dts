@@ -1,0 +1,79 @@
+/*
+ * Copyright 2015 SmartChip Co., Ltd.
+ */
+
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/sca200v100_common.h>
+#include "smartchip-sca200v100-memory.dtsi"
+#include "smartchip-sca200v100.dtsi"
+
+/ {
+	model = "SmartChip, Smartx ipc Demo Board4";
+};
+
+&gpio_reboot {
+	status = "disabled";
+};
+
+&gmac {
+	phy-mode = "rmii";
+	status = "okay";
+};
+&phy0 {
+	eee-broken-100tx;
+	hw-reset-linkup;
+	max-speed = <100>;
+};
+
+&uart0 {
+	status = "okay";
+};
+&uart4 {
+	status = "okay";
+};
+
+&i2c0 {
+	status = "okay";
+};
+&i2c3 {
+	status = "okay";
+};
+
+&soc_regulators {
+	sdmmc_regulator: sdmmc_regulator {
+		compatible = "regulator-gpio";
+
+		regulator-name = "sdmmc-supply";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-boot-on;
+
+		gpios = <&gpio1_b 5 GPIO_ACTIVE_HIGH>;
+		states = <1800000 0x1>,
+			<3300000 0x0>;
+	};
+};
+
+&sdmmc {
+	status = "okay";
+
+	slot@0 {
+		vqmmc-supply = <&sdmmc_regulator>; /* vqmmc-supply for sd0 */
+
+		bus-width = <4>;
+		cap-sd-highspeed;
+		disable-wp;
+		no-mmc;
+		no-sdio;
+		status = "okay";
+	};
+};
+
+/delete-node/ &vbus_regulator0;
+/delete-node/ &vbus_regulator1;
+/delete-node/ &vbus_regulator2;
+&usb_otg0 {
+	status = "okay";
+};

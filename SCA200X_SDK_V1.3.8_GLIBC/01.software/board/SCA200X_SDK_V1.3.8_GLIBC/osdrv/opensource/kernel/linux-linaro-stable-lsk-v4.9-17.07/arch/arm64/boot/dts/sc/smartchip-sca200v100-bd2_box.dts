@@ -1,0 +1,97 @@
+/*
+ * Copyright 2015 SmartChip Co., Ltd.
+ */
+
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/sca200v100_common.h>
+#include "smartchip-sca200v100-memory.dtsi"
+#include "smartchip-sca200v100.dtsi"
+
+/ {
+	/* core board(borad2) + io board(box) */
+	model = "SmartChip, Smartx Development Board2 v1.0/v2.0@box";
+};
+
+&gpio_reboot {
+	status = "okay";
+};
+
+&gmac {
+	phy-mode = "rgmii-id";
+	status = "okay";
+};
+&phy0 {
+	max-speed = <1000>;
+};
+
+&uart0 {
+	status = "okay";
+};
+&uart1 {
+	status = "okay";
+};
+&uart2 {
+	status = "okay";
+};
+&uart3 {
+	status = "okay";
+};
+&uart4 {
+	status = "okay";
+};
+
+&i2c0 {
+	status = "okay";
+
+	ina_0v9@40 {
+		reg = <0x40>;
+		compatible = "ina220";
+		/* uOhm */
+		shunt-resistor = <10000>;
+	};
+	ina_1v2@4c {
+		reg = <0x42>;
+		compatible = "ina220";
+		shunt-resistor = <100000>;
+	};
+	ina_1v8@42 {
+		reg = <0x43>;
+		compatible = "ina220";
+		shunt-resistor = <100000>;
+	};
+};
+
+&i2c1 {
+	status = "okay";
+	ina_5v_sys@41 {
+		reg = <0x41>;
+		compatible = "ina220";
+		shunt-resistor = <100000>;
+	};
+	ina_5v@44 {
+		reg = <0x44>;
+		compatible = "ina220";
+		shunt-resistor = <100000>;
+	};
+};
+
+&vbus_regulator0 {
+	gpio = <&gpio3_d 2 GPIO_ACTIVE_HIGH>;
+};
+/delete-node/ &vbus_regulator1;
+/delete-node/ &vbus_regulator2;
+
+&usb_otg0 {
+	vbus-supply = <&vbus_regulator0>;
+	//dr_mode = "otg";
+	dr_mode = "host";
+	status = "okay";
+};
+&usb_otg1 {
+	status = "okay";
+};
+&usb_otg2 {
+	status = "okay";
+};

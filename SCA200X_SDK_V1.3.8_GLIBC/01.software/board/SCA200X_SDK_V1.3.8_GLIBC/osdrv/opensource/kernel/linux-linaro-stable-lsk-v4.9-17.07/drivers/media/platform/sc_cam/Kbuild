@@ -1,0 +1,17 @@
+# UAPI Header export list
+
+header-y += sc_cam_common.h
+header-y += sc_cam_ctrls.h
+header-y += sc_cam_fops.h
+header-y += sc_cam_ioctl_ops.h
+header-y += sc_cam_mem_ops.h
+header-y += sc_cam_subdev.h
+header-y += sc_cam_vb2_ops.h
+header-y += cam_api.h
+header-y += cam_debug_fs.h
+header-y += cam_log.h
+header-y += cam_rpc.h
+header-y += cam_type_def.h
+header-y += tuning_def.h
+header-y += videodev2_ext.h
+

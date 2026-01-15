@@ -1,0 +1,894 @@
+/*
+ * Copyright 2015 SmartChip Co., Ltd.
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/sca200v100_common.h>
+
+/ {
+	model = "SmartChip, Sca200v200 Development Board1";
+	compatible = "smartchip,smartx-sca200v200";
+
+	#address-cells = <2>;
+	#size-cells = <2>;
+
+	interrupt-parent = <&gic>;
+
+	aliases {
+		serial0 = &uart0;
+		serial1 = &uart1;
+		serial2 = &uart2;
+		serial3 = &uart3;
+		serial4 = &uart4;
+		mmc0 = &emmc;
+		mmc1 = &sdmmc0;
+		mmc2 = &sdmmc1;
+		i2c0 = &i2c0;
+		i2c1 = &i2c1;
+		i2c2 = &i2c2;
+		i2c3 = &i2c3;
+		i2c4 = &i2c4;
+		spi0 = &spim0;
+		spi1 = &spim1;
+		spi2 = &spis0;
+		spi3 = &spis1;
+	};
+
+	chosen {
+		//bootargs = "console=ttyS0,115200n8 earlycon=uart,mmio32,0x08500000";
+		//stdout-path = &uart0;
+	};
+
+	memory@0x20000000 {
+		device_type = "memory";
+		reg = <0 0x20000000 0 0x40000000>;
+	};
+
+	sc_mpp {
+		compatible = "smartchip,sc_mpp";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+		dma-ranges;
+
+		interrupts =
+			<GIC_SPI  75 IRQ_TYPE_LEVEL_HIGH>,  // scalyer
+			<GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;  //
+		interrupt-parent = <&gic>;
+
+		vo {
+			compatible = "smartchip,vo";
+			interrupts =    <GIC_SPI  70 IRQ_TYPE_LEVEL_HIGH>;  //vo
+			reg = <0x08810000 0x100000>;
+		};
+
+		dsi {
+			compatible = "smartchip,dsi";
+			reg = <0x08850000 0x100000>;
+		};
+
+		ge2d {
+			compatible = "smartchip,ge2d";
+			interrupts =
+				<GIC_SPI  79 IRQ_TYPE_LEVEL_HIGH>,  //ge2d 1
+				<GIC_SPI  84 IRQ_TYPE_LEVEL_HIGH>;  //ge2d 2
+			reg = <0x0881f000 0x001000>;
+		};
+
+		isp {
+			compatible = "smartchip,isp";
+			interrupts = <GIC_SPI  71 IRQ_TYPE_LEVEL_HIGH>;  //isp
+			reg = <0x08c00000 0x200000>;
+		};
+
+		vif {
+			compatible = "smartchip,vif";
+			interrupts = <GIC_SPI  62 IRQ_TYPE_LEVEL_HIGH>;  //vif
+			reg = <0x08870000 0x10000>;
+		};
+
+		mipi {
+			compatible = "smartchip,mipi";
+			interrupts =
+				<GIC_SPI  60 IRQ_TYPE_LEVEL_HIGH>,  //mipi0
+				<GIC_SPI  61 IRQ_TYPE_LEVEL_HIGH>;  //mipi1
+			reg = <0x08880000 0x10000>;
+		};
+
+		eis_ldc {
+			compatible = "smartchip,eis_ldc";
+			interrupts = <GIC_SPI  76 IRQ_TYPE_LEVEL_HIGH>;  //eis_ldc
+			reg = <0x01090000 0x100000>;
+		};
+
+		dvp_rx {
+			compatible = "smartchip,dvp_rx";
+			reg = <0x08874000 0x100000>;
+		};
+
+		ahb_dma {
+			compatible = "smartchip,ahb_dma";
+			interrupts =
+				<GIC_SPI  50 IRQ_TYPE_LEVEL_HIGH>,  // ahb dma ch0
+				<GIC_SPI  51 IRQ_TYPE_LEVEL_HIGH>,  // ahb dma ch1
+				<GIC_SPI  52 IRQ_TYPE_LEVEL_HIGH>,  // ahb dma ch2
+				<GIC_SPI  53 IRQ_TYPE_LEVEL_HIGH>,  // ahb dma ch3
+				<GIC_SPI  54 IRQ_TYPE_LEVEL_HIGH>,  // ahb dma ch4
+				<GIC_SPI  55 IRQ_TYPE_LEVEL_HIGH>,  // ahb dma ch5
+				<GIC_SPI  56 IRQ_TYPE_LEVEL_HIGH>,  // ahb dma ch6
+				<GIC_SPI  57 IRQ_TYPE_LEVEL_HIGH>;  // ahb dma ch7
+			reg = <0x01e10000 0x10000>,
+				<0x01A00030 4>;
+		};
+
+		axi_dma {
+			compatible = "smartchip,axi_dma";
+			interrupts =
+				<GIC_SPI  63 IRQ_TYPE_LEVEL_HIGH>, // axi dma ch0
+				<GIC_SPI  64 IRQ_TYPE_LEVEL_HIGH>, // axi dma ch1
+				<GIC_SPI  65 IRQ_TYPE_LEVEL_HIGH>, // axi dma ch2
+				<GIC_SPI  66 IRQ_TYPE_LEVEL_HIGH>; // axi dma ch3
+			reg = <0x08800000 0x1000>;
+		};
+
+		h26x {
+			compatible = "smartchip,h26x";
+			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;  // h26x
+			reg = <0x0A080000 0x10000>;
+		};
+
+		jpeg {
+			compatible = "smartchip,jpeg";
+			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;  // jpeg
+			reg = <0x08830000 0x10000>;
+		};
+
+		sc_clk: sc_clk_ctrl {
+			compatible = "smartchip,sca200v200,clk_ctrl";
+			reg = <0x08850000 0x00001000	// mipi
+				0x0a100000 0x00002000	// a53
+				0x0a102000 0x00002000	// rgu
+				0x0a104000 0x00002000	// cgu
+				0x0a106000 0x00002000	// sys_ctrl
+				0x0a108000 0x00002000>;	// abb
+		};
+
+		audio_codec {
+			compatible = "smartchip,audio_codec";
+			interrupts =  <GIC_SPI  47 IRQ_TYPE_LEVEL_HIGH>;  // audio
+			reg = <0x01900000 0x100000>;
+			aio-dev-idx = <0>;
+		};
+
+		i2s_master_0: i2s@08700000 {
+			compatible = "smartchip,i2s-master-0";
+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+			reg = <0x01700000 0x20000>,
+				<0x08b0000c 0x4>,
+				<0x08b0000c 0x4>;
+			aio-dev-idx = <1>;
+		};
+
+		i2s_master_1: i2s@08720000 {
+			compatible = "smartchip,i2s-master-1";
+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+			reg = <0x01702000 0x20000>,
+				<0x08b0000c 0x4>,
+				<0x08b0000c 0x4>;
+			aio-dev-idx = <2>;
+		};
+		i2s_slave_0: i2s@08760000 {
+			compatible = "smartchip,i2s-slave-0";
+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+			reg = <0x01704000 0x20000>,
+				<0x08b0000c 0x4>,
+				<0x08b0000c 0x4>;
+			aio-dev-idx = <3>;
+		};
+
+		i2s_slave_1: i2s@08780000 {
+			compatible = "smartchip,i2s-slave-1";
+			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+			reg = <0x01706000 0x20000>,
+				<0x08b0000c 0x4>,
+				<0x08b0000c 0x4>;
+			aio-dev-idx = <4>;
+		};
+
+		efuse: efuse@0x00240000 {
+			compatible = "smartchip,efuse";
+			reg = <0x00240000 0x1000>;
+			size = <0x200>;
+		};
+
+
+	};
+
+	pmu {
+		compatible = "arm,armv8-pmuv3";
+		interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+					<GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	cpus:cpus {
+		#address-cells = <2>;
+		#size-cells = <0>;
+
+		cpu0: cpu@0 {
+			compatible = "arm,cortex-a53", "arm,armv8";
+			device_type = "cpu";
+			enable-method = "sc-spin-table";
+			clock-frequency = <1000000000>;
+			reg = <0x00 0x00>;
+			//cci-control-port = <&cci_control>;
+			next-level-cache = <&L2_0>;
+			L2_0: l2-cache {
+				compatible = "arm,arch-cache";
+				cache-level = <2>;
+				L1_I_0: l1-icache {
+					compatible = "arm,arch-cache";
+				};
+				L1_D_0: l1-dcache {
+					compatible = "arm,arch-cache";
+				};
+			};
+		};
+		cpu1: cpu@1 {
+			compatible = "arm,cortex-a53", "arm,armv8";
+			device_type = "cpu";
+			enable-method = "sc-spin-table";
+			cpu-release-addr = <0x0 0x00100000>;
+			clock-frequency = <1000000000>;
+			reg = <0x00 0x01>;
+			//cci-control-port = <&cci_control>;
+			next-level-cache = <&L2_0>;
+		};
+	};
+
+	timer: timer {
+		compatible = "arm,armv8-timer";
+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+			<GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+			<GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+			<GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+
+		clock-frequency = <24000000>;
+		always-on;
+		interrupt-parent = <&gic>;
+		arm,cpu-registers-not-fw-configured;
+	};
+
+	gic: interrupt-controller@00200000 {
+		compatible = "arm,cortex-a7-gic","arm,cortex-a15-gic","arm,gic-400";
+		#interrupt-cells = <3>;
+		#address-cells = <1>;
+		interrupt-controller;
+
+		reg = <0 0x00201000 0 0x1000>,
+		      <0 0x00202000 0 0x1000>,
+		      <0 0x00204000 0 0x2000>,
+		      <0 0x00206000 0 0x2000>;
+		/*interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;*/
+	};
+
+	m7_mux: m7_mux{
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <150000000>;
+		clock-output-names = "i2c_clk","spi_clk","uart_clk";
+	};
+
+	osc24M: osc24M {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <24000000>;
+	};
+
+	host_ref:host_ref{
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <150000000>;
+	};
+
+	can_ref:can_ref{
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <150000000>;
+	};
+
+	rtc_ref:rtc_ref{
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <32768>;
+	};
+
+	gpio0: gpio@0A10A000 {
+		compatible = "smartchip,gpio";
+		reg = <0 0x0A10A000 0 0x2000>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH
+			      GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH
+			      GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH
+			      GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH
+			      GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH
+			      GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH
+			      GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH
+			      GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+		status = "okay";
+
+		porta0: gpio-controller@0 {
+			compatible = "smart,gpio-port";
+			gpio-controller;
+			#gpio-cells = <2>;
+			smart,nr-gpios = <23>;
+			reg = <0>;
+		};
+
+		portb0: gpio-controller@1 {
+			compatible = "smart,gpio-port";
+			gpio-controller;
+			#gpio-cells = <2>;
+			smart,nr-gpios = <22>;
+			reg = <1>;
+		};
+
+		portc0: gpio-controller@2 {
+			compatible = "smart,gpio-port";
+			gpio-controller;
+			#gpio-cells = <2>;
+			smart,nr-gpios = <26>;
+			reg = <2>;
+		};
+
+		portd0: gpio-controller@3 {
+			compatible = "smart,gpio-port";
+			gpio-controller;
+			#gpio-cells = <2>;
+			smart,nr-gpios = <6>;
+			reg = <3>;
+		};
+
+		porte0: gpio-controller@4 {
+			compatible = "smart,gpio-port";
+			gpio-controller;
+			#gpio-cells = <2>;
+			smart,nr-gpios = <6>;
+			reg = <4>;
+		};
+
+		portf0: gpio-controller@5 {
+			compatible = "smart,gpio-port";
+			gpio-controller;
+			#gpio-cells = <2>;
+			smart,nr-gpios = <11>;
+			reg = <5>;
+		};
+
+		portg0: gpio-controller@6 {
+			compatible = "smart,gpio-port";
+			gpio-controller;
+			#gpio-cells = <2>;
+			smart,nr-gpios = <16>;
+			reg = <6>;
+		};
+	};
+
+	soc {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+		dma-ranges;
+
+		uart0: serial@0x01500000 {
+			compatible = "snps,dw-apb-uart";
+			reg = <0x01500000 0x400>;
+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+			reg-shift = <2>;
+			reg-io-width = <4>;
+			clock-frequency = <150000000>;
+
+			status = "okay";
+		};
+
+		uart1: serial@0x01502000 {
+			compatible = "snps,dw-apb-uart";
+			reg = <0x01502000 0x400>;
+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+			reg-shift = <2>;
+			reg-io-width = <4>;
+			clock-frequency = <150000000>;
+
+			status = "disabled";
+		};
+
+		uart2: serial@0x01504000 {
+			compatible = "snps,dw-apb-uart";
+			reg = <0x01504000 0x400>;
+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+			reg-shift = <2>;
+			reg-io-width = <4>;
+			clock-frequency = <150000000>;
+
+			status = "disabled";
+		};
+
+		uart3: serial@0x01506000 {
+			compatible = "snps,dw-apb-uart";
+			reg = <0x01506000 0x400>;
+			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+			reg-shift = <2>;
+			reg-io-width = <4>;
+			clock-frequency = <150000000>;
+
+			status = "disabled";
+		};
+
+		uart4: serial@0x01508000 {
+			compatible = "snps,dw-apb-uart";
+			reg = <0x01508000 0x400>;
+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+			reg-shift = <2>;
+			reg-io-width = <4>;
+			clock-frequency = <150000000>;
+
+			status = "disabled";
+		};
+
+		vbus_regulator0: regulator@0 {
+			compatible = "regulator-fixed";
+			regulator-name = "usb_otg0_vbus";
+			regulator-min-microvolt = <5000000>;
+			regulator-max-microvolt = <5000000>;
+			//gpio = <&portd1 7 GPIO_ACTIVE_HIGH>;
+			enable-active-high;
+		};
+
+		usb_otg0: usb@08000000 {
+			compatible = "smartchip,sca200v100-usb";
+			reg = <0x08000000 0x40000>;
+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
+			//clocks = <&cru HCLK_OTG0>;
+			//clock-names = "otg";
+			dr_mode = "peripheral";
+			//dr_mode = "host";
+			g-np-tx-fifo-size = <32>;
+			g-rx-fifo-size = <768>;
+			g-tx-fifo-size = <768 512 512 32 16 16 16 16 16 16>;
+			g-use-dma;
+			//phys = <&usbphy0>;
+			//phy-names = "usb2-phy";
+			//vbus-supply = <&vbus_regulator0>;
+			status = "disabled";
+		};
+
+		wdt0: wdt@01600000 {
+			compatible = "snps,dw-wdt";
+			reg = <0x01600000 0x100000>;
+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+			clock-names     = "osc24M";
+			clocks          = <&osc24M>;
+			status = "disabled";
+		};
+
+		rtc0: rtc@0a10c000 {
+			compatible = "smartchip,sca200v100-rtc";
+			reg = <0x0a10c000 0x1000>;
+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+			clock-names     = "rtc_clk";
+			clocks          = <&rtc_ref>;
+			status = "disabled";
+		};
+
+		pwm0: pwm@08000000 {
+			compatible = "smartchip,sca200v100-pwm";
+			reg = <0x01000000 0x2000>;
+			clock-names     = "host_clk";
+			clocks          = <&host_ref>;
+			status = "disabled";
+		};
+
+		pwm1: pwm@08040000 {
+			compatible = "smartchip,sca200v100-pwm";
+			reg = <0x01020000 0x2000>;
+			clock-names     = "host_clk";
+			clocks          = <&host_ref>;
+			status = "disabled";
+		};
+
+		tzc: tzc@0x08430000 {
+			compatible = "smartchip,tzc-400";
+			//    tzc-0: 0x64539000    tzc-0: 0x64538000
+			reg = <0x08440000 0x1000>, <0x08430000 0x1000>;
+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+			tzc-region-idx = <1>;
+			status = "disabled";
+		};
+
+		spim0: spim0@08100000 {
+			compatible = "snps,dw-apb-ssi";
+			reg = <0x01100000 0x2000>;
+			reg-io-width = <4>;
+			num-cs = <4>;
+			component = <0>;
+			is_slave = <0>;
+			enable_dma = <0>;
+			eeprom_mode = <1>;
+			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&host_ref>;
+			clock-names = "spi_clk";
+			status = "disabled";
+		};
+
+		spim1: spim1@08140000 {
+			compatible = "snps,dw-apb-ssi";
+			reg = <0x01102000 0x2000>;
+			reg-io-width = <4>;
+			num-cs = <4>;
+			//rx-sample-delay-ns = <3>;
+			component = <0>;
+			is_slave = <0>;
+			enable_dma = <0>;
+			eeprom_mode = <1>;
+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&host_ref>;
+			clock-names = "spi_clk";
+			status = "disabled";
+		};
+
+		spis0: spis0@08800000 {
+			compatible = "snps,dw-apb-ssi";
+			reg = <0x01800000 0x2000>;
+			reg-io-width = <4>;
+			num-cs = <4>;
+			component = <0>;
+			is_slave = <1>;
+			enable_dma = <0>;
+			eeprom_mode = <1>;
+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&host_ref>;
+			clock-names = "spi_clk";
+			status = "disabled";
+		};
+
+		spis1: spis1@08880000 {
+			compatible = "snps,dw-apb-ssi";
+			reg = <0x01802000 0x2000>;
+			reg-io-width = <4>;
+			num-cs = <4>;
+			//rx-sample-delay-ns = <3>;
+			component = <0>;
+			is_slave = <1>;
+			enable_dma = <0>;
+			eeprom_mode = <1>;
+			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&host_ref>;
+			clock-names = "spi_clk";
+			status = "disabled";
+		};
+
+		i2c0: i2c0@01200000 {
+			compatible = "snps,designware-i2c";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0x01200000 0x2000>;
+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+			clock-frequency = <400000>;
+			i2c-sda-hold-time-ns = <300>;
+			i2c-sda-falling-time-ns = <300>;
+			i2c-scl-falling-time-ns = <300>;
+			clocks = <&m7_mux>;
+			clock-names = "i2c_clk";
+			status = "disabled";
+		};
+
+		i2c1: i2c1@01202000 {
+			compatible = "snps,designware-i2c";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0x01202000 0x2000>;
+			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+			clock-frequency = <400000>;
+			i2c-sda-hold-time-ns = <300>;
+			i2c-sda-falling-time-ns = <300>;
+			i2c-scl-falling-time-ns = <300>;
+			clocks = <&m7_mux>;
+			clock-names = "i2c_clk";
+			status = "disabled";
+		};
+
+		i2c2: i2c2@01204000 {
+			compatible = "snps,designware-i2c";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0x01204000 0x2000>;
+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+			clock-frequency = <400000>;
+			i2c-sda-hold-time-ns = <300>;
+			i2c-sda-falling-time-ns = <300>;
+			i2c-scl-falling-time-ns = <300>;
+			clocks = <&m7_mux>;
+			clock-names = "i2c_clk";
+			status = "disabled";
+		};
+
+		i2c3: i2c3@01206000 {
+			compatible = "snps,designware-i2c";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0x01206000 0x2000>;
+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+			clock-frequency = <400000>;
+			i2c-sda-hold-time-ns = <300>;
+			i2c-sda-falling-time-ns = <300>;
+			i2c-scl-falling-time-ns = <300>;
+			clocks = <&m7_mux>;
+			clock-names = "i2c_clk";
+			status = "disabled";
+		};
+
+		i2c4: i2c4@01208000 {
+			compatible = "snps,designware-i2c";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0x01208000 0x2000>;
+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+			clock-frequency = <400000>;
+			i2c-sda-hold-time-ns = <300>;
+			i2c-sda-falling-time-ns = <300>;
+			i2c-scl-falling-time-ns = <300>;
+			clocks = <&m7_mux>;
+			clock-names = "i2c_clk";
+			status = "disabled";
+		};
+
+		vqmmc_sdhci: regulator-vqmmc-sdhci {
+			compatible = "regulator-gpio";
+			regulator-name = "vqmmc sdhci";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <3300000>;
+			gpios-states = <0>;
+			states = <3300000 0
+				  1800000 1>;
+		};
+
+		emmc: sdhci@08050000 {
+			compatible = "smartchip,proxima-sdhc";
+			reg = <0x08050000 0x2000>;
+			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+			max-frequency = <200000000>;
+			card-detect-delay = <200>;
+			num-slots = <1>;
+			bus-width = <8>;
+			full-pwr-cycle;
+			cap-mmc-highspeed;
+			cap-mmc-hw-reset;
+			disable-wp;
+			non-removable;
+			no-sdio;
+			no-sd;
+			voltage-ranges = <3300 3300>;
+			no-1-8-v;
+			status = "disabled";
+		};
+
+		vqmmc_sdmmc0: regulator-vqmmc-sdmmc0 {
+			compatible = "regulator-gpio";
+			regulator-name = "vqmmc sdmmc0";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <3300000>;
+			gpios-states = <0>;
+			states = <3300000 0
+				  1800000 1>;
+		};
+
+		sdmmc0:  mmc0@01b00000 {
+			compatible = "dwmmc0", "smartchip,proxima-dw-mshc";
+			reg = <0x01b00000 0x1000>;
+			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+			clock-frequency = <200000000>;
+			clock-freq-min-max = <400000 100000000>;
+			card-detect-delay = <200>;
+			num-slots = <1>;
+			bus-width = <4>;
+			full-pwr-cycle;
+			cap-sd-highspeed;
+			cap-mmc-hw-reset;
+			disable-wp;
+			sd-uhs-sdr12;
+			sd-uhs-sdr25;
+			sd-uhs-sdr50;
+			sd-uhs-sdr104;
+			no-mmc;
+			no-sdio;
+			status = "disabled";
+		};
+
+		vqmmc_sdmmc1: regulator-vqmmc-sdmmc1 {
+			compatible = "regulator-gpio";
+			regulator-name = "vqmmc sdmmc1";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <3300000>;
+			gpios-states = <0>;
+			states = <3300000 0
+				  1800000 1>;
+		};
+
+		sdmmc1:  mmc1@01c00000 {
+			compatible = "dwmmc1", "smartchip,proxima-dw-mshc";
+			reg = <0x01c00000 0x1000>;
+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+			clock-frequency = <200000000>;
+			clock-freq-min-max = <400000 100000000>;
+			card-detect-delay = <200>;
+			num-slots = <1>;
+			bus-width = <4>;
+			full-pwr-cycle;
+			cap-sd-highspeed;
+			cap-mmc-hw-reset;
+			disable-wp;
+			sd-uhs-sdr12;
+			sd-uhs-sdr25;
+			sd-uhs-sdr50;
+			sd-uhs-sdr104;
+			no-mmc;
+			no-sdio;
+			status = "disabled";
+		};
+
+		mdio: mdio@08040000 {
+			reg = <0x08040000 0x1020>;
+			compatible = "smartchip,smartx-gmac-mdio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+
+			phy0: ethernet-phy@1 {
+				compatible = "ethernet-phy-ieee802.3-c22";
+				reg = <1>;
+				//interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
+				max-speed = <100>;
+				status = "disabled";
+			};
+		};
+
+		gmac: ethernet@08040000 {
+			compatible = "smartchip,smartx-gmac";
+			reg = <0x08040000 0x1020>;
+			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
+			mac-address = [00 00 01 02 03 04]; /*This should not be here if uboot has set mac already*/
+			phy-mode = "rmii";
+			phy-handle = <&phy0>;
+			tzc-handle = <&tzc>;
+			tx-fifo-depth = <3>;
+			tx-fifo-depth-1000 = <2>;
+			tx-bd-num = <64>; /*total 128 bds, rx-bd-num = 128 - tx-bd-num*/
+			tx-enhance;
+			rx-enhance;
+			status = "disabled";
+		};
+
+		qspi: qspi@0A000000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "smartchip,sca200v100-qspi";
+			reg = <0x01e00000 0x1000>,
+				<0x0a104034 0x40>,
+				<0x01e10000 0x1000>,
+				<0x01a00030 0x40>;
+			reg-names = "qspi_base", "cgu_base", "dma_base", "hs_sel_base";
+			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+			clock-frequency = <100000000>;
+			dma-channel = <0>;
+			timing-cfg = <0>;
+			status = "disabled";
+
+			flash@0 {
+				#address-cells = <1>;
+				#size-cells = <1>;
+				compatible = "jedec,spi-nor";
+				reg = <SPI_NOR_CS0>;
+				spi-max-frequency = <150000000>;
+			};
+			flash@1 {
+				#address-cells = <1>;
+				#size-cells = <1>;
+				compatible = "spi-nand";
+				reg = <SPI_NAND_CS0>;
+				spi-max-frequency = <150000000>;
+			};
+			flash@2 {
+				#address-cells = <1>;
+				#size-cells = <1>;
+				compatible = "jedec,spi-nor";
+				reg = <SPI_NOR_CS1>;
+				spi-max-frequency = <150000000>;
+			};
+			flash@3 {
+				#address-cells = <1>;
+				#size-cells = <1>;
+				compatible = "spi-nand";
+				reg = <SPI_NAND_CS1>;
+				spi-max-frequency = <150000000>;
+			};
+		};
+
+		npu:npu@0A000000 {
+			compatible = "smartchip,npu";
+			reg = <0x0A000000 0x20000>;
+			control = <0x0A100000>;
+			dma_control = <0xF>; /*chan 3 sec, non cachable*/
+			npu_sec_control = <1>; /*chan 0 no sec, 1 sec*/
+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+			cb_to_arm = <1>;
+		};
+
+		ifc:ifc@08844000 {
+			compatible = "smartchip,ifc";
+			reg = <0x08844000 0x1000>;
+			control = <0x0A100000>;
+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+		scaler:scaler@08840000 {
+			compatible = "smartchip,scaler";
+			reg = <0x08840000 0x1000>;
+			control = <0x0A100000>;
+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+		gdc:gdc@08848000 {
+			compatible = "smartchip,gdc";
+			reg = <0x08848000 0x1000>;
+			control = <0x0A100000>;
+			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+		rcu:rcu@010c0000 {
+			compatible = "smartchip,rcu";
+			reg = <0x010c0000 0x20000>;
+			status = "disabled";
+		};
+
+		sc_framebuffer: sc_framebuffer {
+			compatible = "smartchip,sc_framebuffer";
+		};
+
+		adc:adc@a108200 {
+			compatible = "smartchip,adc";
+			reg = <0x0a108200 0x30>,
+				<0x0a108000 0x30>; //abb regitster
+		};
+
+		sec_uart:serial@01052000 {
+			compatible = "snps,dw-apb-uart";
+			reg = <0x08422000 0x2000>;
+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+			reg-shift = <2>;
+			reg-io-width = <4>;
+			clock-frequency = <150000000>;
+			status = "disabled";
+		};
+
+		sec_timer:timer@01054000 {
+			compatible = "snps,dw-apb-timer-osc", "snps,dw-apb-timer";
+			reg = <0x08424000 0x2000>;
+			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+			clock-frequency = <150000000>;
+			status = "disabled";
+		};
+
+		sec_wdt:wdt@01056000 {
+			compatible = "snps,dw-wdt";
+			reg = <0x08426000 0x2000>;
+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+			clock-names     = "osc24M";
+			clocks          = <&osc24M>;
+			status = "disabled";
+		};
+	};
+};

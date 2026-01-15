@@ -1,0 +1,36 @@
+config VIDEO_SMARTCHIP_CAM
+        tristate "SmartChip camera support"
+        depends on ARCH_SMARTCHIP
+        #select VIDEOBUF2_DMA_CONTIG
+	#select VIDEOBUF2_VMALLOC
+	select VIDEOBUF2_CORE
+	#select SMARTCHIP_CAM_RPC
+	#select SMARTCHIP_CAM_RPC_API
+	#select SMARTCHIP_CAM_RPC_LOG
+	#select SMARTCHIP_CAM_RPC_DEBUG
+        ---help---
+          This is a v4l2 driver for SmartChip Smartx camera
+
+config SMARTCHIP_CAM_RPC
+	bool "SmartChip camera RPC"
+#	#depends on VIDEO_SMARTCHIP_CAM
+#	---help---
+#	  The RPC for SmartChip camera, must select
+#
+config SMARTCHIP_CAM_RPC_API
+	bool "SmartChip camera RPC API"
+#	#depends on SMARTCHIP_CAM_RPC
+#	---help---
+#	  SmartChip RPC API support for cameras
+#
+config SMARTCHIP_CAM_RPC_LOG
+	bool "SmartChip camera RPC log"
+#	depends on SMARTCHIP_CAM_RPC
+#	---help---
+#	  SmartChip logs support for camera
+#
+config SMARTCHIP_CAM_RPC_DEBUG
+	bool "SmartChip camera RPC debugfs support"
+#	#depends on SMARTCHIP_CAM_RPC
+#	---help---
+#	  SmartChip RPC debugfs support for camera

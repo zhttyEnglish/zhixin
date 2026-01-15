@@ -1,0 +1,13 @@
+config SMARTX_ETH
+	tristate "Smartx Ethernet support"
+	select CRC32
+	select MII
+	select PHYLIB
+	default y
+
+config SMARTX_ETH_BASIC_FEATURES
+	bool "Disable Gigabit Ethernet Features"
+	depends on SMARTX_ETH
+	---help---
+	  Do not advertise 1000BT capabilities during auto negotiation process,
+	  even if supported by ethernet core.

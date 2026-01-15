@@ -1,0 +1,4 @@
+# UAPI Header export list
+header-y += events.h
+header-y += types.h
+#header-y += inv_mpu_ioctl.h
