@@ -1,0 +1,9 @@
+obj-y += pka/
+obj-y += spacc/
+obj-y += otp/
+obj-y += troot/
+obj-y += keys/
+#obj-y += smc/
+obj-y += spl_verify.o
+obj-y += optee.o
+obj-y += derive_key.o
