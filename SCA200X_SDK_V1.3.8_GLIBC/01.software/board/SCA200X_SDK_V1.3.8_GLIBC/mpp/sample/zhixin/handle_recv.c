@@ -102,7 +102,7 @@ int parse_update_reply(uint8_t * buf, int buf_size)
 extern int upload_image_for_permittion;
 int parse_snapshot(uint8_t * buf, int buf_size)
 {
-	void *dictionary = iniparser_load(COMMON_INI_PATH);
+	void *dictionary = iniparser_load(PARAM_INI_PATH);
     if (!dictionary) {
         log("cannot parse\r\n");
         return -2;
@@ -124,11 +124,11 @@ int parse_snapshot(uint8_t * buf, int buf_size)
 		sprintf(hour1, "%d", snapshot_hour1);sprintf(hour2, "%d", snapshot_hour2);
 		sprintf(min1, "%d", snapshot_min1);sprintf(min2, "%d", snapshot_min2);
 		log("====== %d:%d %d:%d ======\r\n", snapshot_hour1, snapshot_min1, snapshot_hour2, snapshot_min2);
-		iniparser_set(dictionary, "common:timed_snapshot_switch", timed_snapshot_switch == 1 ? "TRUE" : "FALSE");
-		iniparser_set(dictionary, "common:snapshot_hour1", hour1);
-		iniparser_set(dictionary, "common:snapshot_min1", min1);
-		iniparser_set(dictionary, "common:snapshot_hour2", hour2);
-		iniparser_set(dictionary, "common:snapshot_min2", min2);
+		iniparser_set(dictionary, "param:timed_snapshot_switch", timed_snapshot_switch == 1 ? "TRUE" : "FALSE");
+		iniparser_set(dictionary, "param:snapshot_hour1", hour1);
+		iniparser_set(dictionary, "param:snapshot_min1", min1);
+		iniparser_set(dictionary, "param:snapshot_hour2", hour2);
+		iniparser_set(dictionary, "param:snapshot_min2", min2);
 		
 	}
 	else if(host_reply.payload.snapshot_type == 2 )
@@ -158,10 +158,10 @@ int parse_snapshot(uint8_t * buf, int buf_size)
 				cam_status[i].remote_upload = 0;
 			}		
 		}
-		iniparser_set(dictionary, "common:remote_permission", remote_permission == 1 ? "TRUE" : "FALSE");
+		iniparser_set(dictionary, "param:remote_permission", remote_permission == 1 ? "TRUE" : "FALSE");
 	}
 
-	FILE *fp = fopen(COMMON_INI_PATH, "w+");
+	FILE *fp = fopen(PARAM_INI_PATH, "w+");
     if (!fp) {
         log("iniparser: cannot open\r\n");
         iniparser_freedict(dictionary);
@@ -176,7 +176,7 @@ int parse_snapshot(uint8_t * buf, int buf_size)
 int parse_alarm_level_reply(uint8_t * buf, int buf_size)
 {
 //	log("-----\r\n");
-	void *dictionary = iniparser_load(COMMON_INI_PATH);
+	void *dictionary = iniparser_load(PARAM_INI_PATH);
     if (!dictionary) {
         log("cannot parse\r\n");
         return -2;
@@ -204,10 +204,10 @@ int parse_alarm_level_reply(uint8_t * buf, int buf_size)
 		sprintf(lv, "%d", alarm_level); sprintf(lv1, "%d", lv1_alarm_time);
 		sprintf(lv2, "%d", lv2_alarm_time); sprintf(lv3, "%d", lv3_alarm_time);
 		log("lv %s lv1 %s lv2 %s lv3 %s\r\n", lv, lv1, lv2, lv3);
-		iniparser_set(dictionary, "common:alarm_level", lv);
-		iniparser_set(dictionary, "common:lv1_alarm_time", lv1);
-		iniparser_set(dictionary, "common:lv2_alarm_time", lv2);
-		iniparser_set(dictionary, "common:lv3_alarm_time", lv3);
+		iniparser_set(dictionary, "param:alarm_level", lv);
+		iniparser_set(dictionary, "param:lv1_alarm_time", lv1);
+		iniparser_set(dictionary, "param:lv2_alarm_time", lv2);
+		iniparser_set(dictionary, "param:lv3_alarm_time", lv3);
 	}
 	else if(alarm_lv_reply.payload.alarm_param == 2)
 	{
@@ -218,11 +218,11 @@ int parse_alarm_level_reply(uint8_t * buf, int buf_size)
 		log("alarm_param = %d alarm_model_len = %d model %s\r\n", alarm_lv_reply.payload.alarm_param, alarm_lv_reply.payload.alarm_model_len, alarm_lv_reply.payload.model);
 		memcpy(model, alarm_lv_reply.payload.model, alarm_lv_reply.payload.alarm_model_len);
 		
-		iniparser_set(dictionary, "common:model", model);
+		iniparser_set(dictionary, "param:model", model);
 		free(alarm_lv_reply.payload.model);
 	}
 	
-	FILE *fp = fopen(COMMON_INI_PATH, "w+");
+	FILE *fp = fopen(PARAM_INI_PATH, "w+");
     if (!fp) {
         log("iniparser: cannot open\r\n");
         iniparser_freedict(dictionary);

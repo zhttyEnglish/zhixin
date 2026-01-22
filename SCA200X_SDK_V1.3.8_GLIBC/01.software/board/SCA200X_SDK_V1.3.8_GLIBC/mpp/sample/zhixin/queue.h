@@ -2,12 +2,12 @@
 
 // 队列的最大大小
 #define QUEUE_SIZE 8
-#define PATH_LEN 128
+#define PATH_LEN 64
 
 // 队列元素结构体
 typedef struct {
-    char * image_path; 
-	char * result_path;
+    char image_path[PATH_LEN]; 
+	char result_path[PATH_LEN];
     int in_use;              // 标志，表示该内存块是否已被占用
 } QueueElement;
 

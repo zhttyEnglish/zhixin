@@ -268,7 +268,7 @@ int read_and_parse_json(char * path, int cam_id) //解析结果
 					continue;
 				}
 
-				//log("j = %d alarm_type = %d alarm_time = %d alarm_flag = %d\r\n", j, p_alarm_model[j].alarm_type, p_alarm_model[j].alarm_time, p_alarm_model[j].alarm_flag);
+				log("j = %d alarm_type = %d alarm_time = %d alarm_flag = %d\r\n", j, p_alarm_model[j].alarm_type, p_alarm_model[j].alarm_time, p_alarm_model[j].alarm_flag);
 				if(p_alarm_model[j].alarm_time == 0) //报警时间为0 实时上报
 				{
 					p_alarm_model[j].alarm_flag = 0;
@@ -285,7 +285,7 @@ int read_and_parse_json(char * path, int cam_id) //解析结果
 					p_alarm_model[j].alarm_timestamp = get_timestamp();
 					p_alarm_model[j].alarm_flag = 1;
 				}
-//				log("alarm_type = %d alarm_time = %d alarm_flag = %d\r\n", p_alarm_model[j].alarm_type, p_alarm_model[j].alarm_time, p_alarm_model[j].alarm_flag);
+				log("alarm_type = %d alarm_time = %d alarm_flag = %d\r\n", p_alarm_model[j].alarm_type, p_alarm_model[j].alarm_time, p_alarm_model[j].alarm_flag);
 //			}	
 		}
 	}
@@ -505,6 +505,25 @@ int save_alarm_history(char * result_path, char * image_path, char * alarm_list,
 	return 0;
 }
 
+int popen_exe(char * buf)
+{
+	FILE * fp;
+	int redo = 0;
+	do{		
+		redo = 0;	
+		fp = popen(buf, "r");
+		char log[128] = {0};
+		while(fgets(log, 128, fp) != NULL){
+			if(strstr(log, "failed") != NULL){
+				redo = 1;
+			}	
+		}
+	}while(redo);
+	pclose(fp);
+	return 0;
+}
+
+
 static void * get_algo_result_process(void * args)
 {
 //	log("----------\r\n");
@@ -593,8 +612,8 @@ static void * get_algo_result_process(void * args)
 //			log("---------- recv_len = %d connect_fd = %d ----------\r\n", recv_len, connect_fd);
 
 			ret = get_result_image_path(buf, result_path, image_path);
-			log("result_path %s image_path %s\r\n", result_path, image_path);
 			int cam_id = get_camid(result_path);
+			log("cam_id = %d result_path %s image_path %s\r\n", cam_id, result_path, image_path);
 //			ret = send_ack(connect_fd, buf, ret, result_path, image_path);
 //			if(ret == -5){
 //				log("send ack or open file error ret = %d\r\n", ret);
@@ -606,8 +625,11 @@ static void * get_algo_result_process(void * args)
 //			}
 			if(cam[cam_id].in_use == 1){
 				queue_allocate(&queue, image_path, result_path);
+			}else{
+				remove(image_path);
+				remove(result_path);
 			}
-			//usleep(5 * 1000);
+			usleep(50 * 1000);
 		}
 		set_error_led(1);
 	    close(local_sock);
@@ -616,25 +638,6 @@ static void * get_algo_result_process(void * args)
 	queue_destroy(&queue);
 	return 0;
 }
-
-void remove_image()
-{
-	if(if_exist(queue.elements[queue.tail].image_path) == 0){
-		if(remove(queue.elements[queue.tail].image_path) != 0){
-			log("========== delete %s error ==========\r\n", queue.elements[queue.tail].image_path);
-		}
-	}
-}
-
-void remove_json()
-{
-	if(if_exist(queue.elements[queue.tail].result_path) == 0){
-		if(remove(queue.elements[queue.tail].result_path) != 0){
-			log("========== delete %s error ==========\r\n", queue.elements[queue.tail].result_path);
-		}
-	}
-}
-
 
 extern int TTU_init_flag;
 static void * send_alarm_process(void * args)
@@ -648,37 +651,57 @@ static void * send_alarm_process(void * args)
 		{
 			//if(TTU_init_flag)
 			//{
-				// 读取结果
-				cam_id = get_camid(queue.elements[queue.tail].result_path);
-				get_device_name(cam_id, device_name);
-				alarm_type_count = read_and_parse_json(queue.elements[queue.tail].result_path, cam_id);
-				log("alarm_type_count %d alarm_type_list %s\r\n", alarm_type_count, alarm_type_list);
+			// 读取结果
+			cam_id = get_camid(queue.elements[queue.tail].result_path);
+			get_device_name(cam_id, device_name);
+			alarm_type_count = read_and_parse_json(queue.elements[queue.tail].result_path, cam_id);
+			log("alarm_type_count %d alarm_type_list %s\r\n", alarm_type_count, alarm_type_list);
+
+			memset(buf, 0, 1024);
+			sprintf(buf, "/userdata/draw_text %s %s", queue.elements[queue.tail].image_path, queue.elements[queue.tail].result_path);
+			popen_exe(buf);
+			usleep(200 * 1000);
 			
+			memset(buf, 0, 1024);
+			handle_send_data_pre(buf, queue.elements[queue.tail].image_path, cam_id + 1); //cam_id 需要设置
+			//log("---------- after handle_send_data_pre ----------\r\n");
+			
+			if(alarm_type_count != 0)
+			{
+				log("+++++++++++++++++++++++ alarm +++++++++++++++++++++\r\n");
+				// 报警 上传报警信息和图片 
 				memset(buf, 0, 1024);
-				handle_send_data_pre(buf, queue.elements[queue.tail].image_path, cam_id + 1); //cam_id 需要设置
-				//log("---------- after handle_send_data_pre ----------\r\n");
-				
-				if(alarm_type_count != 0)
-				{
-					log("+++++++++++++++++++++++ alarm +++++++++++++++++++++\r\n");
-					// 报警 上传报警信息和图片 
-					memset(buf, 0, 1024);
-					send_alarm_data_pre(buf, queue.elements[queue.tail].image_path, alarm_id, device_name, alarm_type_list, alarm_type_count);
-					// 报警灯
-					system("sudo /etc/init.d/led on 8");
-					memset(buf, 0, 1024);
-					save_alarm_history(queue.elements[queue.tail].result_path, queue.elements[queue.tail].image_path, alarm_type_list, alarm_type_count);
+				send_alarm_data_pre(buf, queue.elements[queue.tail].image_path, alarm_id, device_name, alarm_type_list, alarm_type_count);
+				// 报警灯
+				system("sudo /etc/init.d/led on 8");
+				memset(buf, 0, 1024);
+				save_alarm_history(queue.elements[queue.tail].result_path, queue.elements[queue.tail].image_path, alarm_type_list, alarm_type_count);
 
-					database_select();
+				database_select();
 
-					alarm_id ++;
-					memset(alarm_type_list, '!', 16);
-					alarm_type_count = 0;	
-					
-				}else{
-					remove_image();
-					remove_json();
+				alarm_id ++;
+				memset(alarm_type_list, '!', 16);
+				alarm_type_count = 0;	
+
+				if(if_exist(queue.elements[queue.tail].result_path) == 0){
+					if(remove(queue.elements[queue.tail].result_path) != 0){
+						log("========== delete %s error ==========\r\n", queue.elements[queue.tail].result_path);
+					}
 				}
+				
+			}else{
+				//log("--- remove %s %s ---\r\n", queue.elements[queue.tail].result_path, queue.elements[queue.tail].image_path);
+				if(if_exist(queue.elements[queue.tail].result_path) == 0){
+					if(remove(queue.elements[queue.tail].result_path) != 0){
+						log("========== delete %s error ==========\r\n", queue.elements[queue.tail].result_path);
+					}
+				}
+				if(if_exist(queue.elements[queue.tail].image_path) == 0){
+					if(remove(queue.elements[queue.tail].image_path) != 0){
+						log("========== delete %s error ==========\r\n", queue.elements[queue.tail].image_path);
+					}
+				}
+			}
 			//}
 			//else{
 			//	remove_image();
@@ -721,7 +744,7 @@ static void * send_alarm_process(void * args)
 				alarm_recover_count = 0;
 			}
 		}
-		usleep(200 * 1000);
+		usleep(50 * 1000);
 	}
 	database_exit();
 	return 0;

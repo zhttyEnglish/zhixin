@@ -51,12 +51,11 @@ int get_model_count(char * model, int model_str_len)
 	return count;
 }
 
-int parse_common_ini(char * path)
+int parse_param_ini(char * path)
 {
+	log("========== parse_param_ini ==========\r\n");
 	dictionary * ini;
 	int i = 0;
-
-	memset(&cam_status, 0, sizeof(cam_status_t) * 4);
 
 	if(p_alarm_model != NULL && model_count != 0)
 	{
@@ -71,37 +70,21 @@ int parse_common_ini(char * path)
     }
     iniparser_dump(ini, stderr);
 	
-	strcpy(server_ip, iniparser_getstring(ini, "common:server_ip", "192.168.31.211"));
-	port = iniparser_getint(ini, "common:port", 6000);
-	strcpy(device_name, iniparser_getstring(ini, "common:device_name", "123456211000"));
-	strcpy(camera_name[0], iniparser_getstring(ini, "common:camera_name1", "0000000000000"));
-	strcpy(camera_name[1], iniparser_getstring(ini, "common:camera_name2", "0000000000000"));
-	strcpy(camera_name[2], iniparser_getstring(ini, "common:camera_name3", "0000000000000"));
-	strcpy(camera_name[3], iniparser_getstring(ini, "common:camera_name4", "0000000000000"));
-	strcpy(model, iniparser_getstring(ini, "common:model", "{}"));
-	snapshot_type = iniparser_getint(ini, "common:snapshot_type", -1);
-	device_num = iniparser_getint(ini, "common:device_num", 1);
-	heartbeat_time = iniparser_getint(ini, "common:heartbeat_time", 300);
-	remote_permission = iniparser_getboolean(ini, "common:remote_permission", TRUE);
-	timed_snapshot_switch = iniparser_getboolean(ini, "common:timed_snapshot_switch", FALSE);
-	snapshot_hour1 = iniparser_getint(ini, "common:snapshot_hour1", -1);
-	snapshot_hour2 = iniparser_getint(ini, "common:snapshot_hour2", -1);
-	snapshot_min1 = iniparser_getint(ini, "common:snapshot_min1", -1);
-	snapshot_min2 = iniparser_getint(ini, "common:snapshot_min2", -1);
-	remote_test_camera_id = iniparser_getint(ini, "common:remote_test_camera_id", -1);
-	alarm_level = iniparser_getint(ini, "common:alarm_level", 4);
-	lv1_alarm_time = iniparser_getint(ini, "common:lv1_alarm_time", 300);
-	lv2_alarm_time = iniparser_getint(ini, "common:lv2_alarm_time", 60);
-	lv3_alarm_time = iniparser_getint(ini, "common:lv3_alarm_time", 10);
-
-	for(i = 0; i < 4; i ++){
-		cam_status[i].cam_id = i;
-		//cam_status[i].device_name = camera_name[i];
-		if(strncmp(camera_name[i], "000000", 6) != 0){
-			memcpy(cam_status[i].device_name, camera_name[i], 13);
-		}
-	}
-
+	strcpy(model, iniparser_getstring(ini, "param:model", "{}"));
+	snapshot_type = iniparser_getint(ini, "param:snapshot_type", -1);
+	heartbeat_time = iniparser_getint(ini, "param:heartbeat_time", 300);
+	remote_permission = iniparser_getboolean(ini, "param:remote_permission", TRUE);
+	timed_snapshot_switch = iniparser_getboolean(ini, "param:timed_snapshot_switch", FALSE);
+	snapshot_hour1 = iniparser_getint(ini, "param:snapshot_hour1", -1);
+	snapshot_hour2 = iniparser_getint(ini, "param:snapshot_hour2", -1);
+	snapshot_min1 = iniparser_getint(ini, "param:snapshot_min1", -1);
+	snapshot_min2 = iniparser_getint(ini, "param:snapshot_min2", -1);
+	remote_test_camera_id = iniparser_getint(ini, "param:remote_test_camera_id", -1);
+	alarm_level = iniparser_getint(ini, "param:alarm_level", 4);
+	lv1_alarm_time = iniparser_getint(ini, "param:lv1_alarm_time", 300);
+	lv2_alarm_time = iniparser_getint(ini, "param:lv2_alarm_time", 60);
+	lv3_alarm_time = iniparser_getint(ini, "param:lv3_alarm_time", 10);
+	
 	model_count = get_model_count(model, strlen(model));
 	int * model_alarm_level = (int *)malloc(sizeof(int) * model_count);
 	char ** model_list = (char **)malloc(sizeof(char *) * model_count);
@@ -186,6 +169,44 @@ int parse_common_ini(char * path)
 }
 
 
+int parse_common_ini(char * path)
+{
+	log("========== parse_common_ini ==========\r\n");
+	dictionary * ini;
+	int i = 0;
+
+	memset(&cam_status, 0, sizeof(cam_status_t) * 4);
+
+	ini = iniparser_load(path);
+    if (ini==NULL) {
+        log("cannot parse %s\r\n", path);
+        return -1 ;
+    }
+    iniparser_dump(ini, stderr);
+	
+	strcpy(server_ip, iniparser_getstring(ini, "common:server_ip", "192.168.31.211"));
+	port = iniparser_getint(ini, "common:port", 6000);
+	strcpy(device_name, iniparser_getstring(ini, "common:device_name", "123456211000"));
+	strcpy(camera_name[0], iniparser_getstring(ini, "common:camera_name1", "0000000000000"));
+	strcpy(camera_name[1], iniparser_getstring(ini, "common:camera_name2", "0000000000000"));
+	strcpy(camera_name[2], iniparser_getstring(ini, "common:camera_name3", "0000000000000"));
+	strcpy(camera_name[3], iniparser_getstring(ini, "common:camera_name4", "0000000000000"));
+	device_num = iniparser_getint(ini, "common:device_num", 1);
+	
+	for(i = 0; i < 4; i ++){
+		cam_status[i].cam_id = i;
+		//cam_status[i].device_name = camera_name[i];
+		if(strncmp(camera_name[i], "000000", 6) != 0){
+			memcpy(cam_status[i].device_name, camera_name[i], 13);
+		}
+	}
+	
+	iniparser_freedict(ini);
+
+	return 0;
+}
+
+
 
 int get_timestamp()
 {
@@ -250,6 +271,7 @@ void show_parse()
 
 int parse_config_ini_file(char * path)
 {
+	log("========== parse_config_ini_file ==========\r\n");
 	dictionary * ini;
 
 	ini = iniparser_load(path);
@@ -257,7 +279,7 @@ int parse_config_ini_file(char * path)
         log("cannot parse %s\r\n", path);
         return -1 ;
     }
-//    iniparser_dump(ini, stderr);
+    iniparser_dump(ini, stderr);
 
 	memset(&config, 0, sizeof(config_ini_t));
 	memset(&cam[0], 0, sizeof(camera_conf_t));

@@ -55,15 +55,15 @@ typedef struct alarm_model
 }alarm_model_t;
 
 int parse_common_ini(char * path);
-
+int parse_param_ini(char * path);
 int parse_config_ini_file(char * path);
-int create_config_ini(char * path);
-int change_ini_file(char * path);
-int parse_config_aux_ini(char * path);
+//int create_config_ini(char * path);
+//int change_ini_file(char * path);
+//int parse_config_aux_ini(char * path);
 
 int get_timestamp();
 int get_file_timestamp(char *filename);
 
-int check_file_pthread_init();
+//int check_file_pthread_init();
 
 

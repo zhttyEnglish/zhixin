@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,7 +25,8 @@
 #include <atomic>
 #include <condition_variable>
 #include "sample_npu.h"
-
+#include <dirent.h>
+#include <sys/types.h>
 
 #include <iostream>
 #include <opencv2/core.hpp>
@@ -83,6 +83,8 @@ size_t g_frame_count[MAX_CHN_NUM] = {0};
 pthread_mutex_t result_mutex = PTHREAD_MUTEX_INITIALIZER;
 size_t f_id=1;
 size_t num[4] = {0};
+
+int stop_flag[MAX_CHN_NUM]={0};
 
 Config g_config;
 
@@ -361,9 +363,9 @@ void *test_save(void *param)
         vdec_data.data = buf;
         vdec_data.len = video_info->size;
         vdec_data.pts = 0;
-        static int stop_flag = 0;
+        //static int stop_flag = 0;
     retry:
-        if(!stop_flag)
+        if(!stop_flag[chn])
         {
             ret = mpp_vdec_send_stream(chn,&vdec_data);
             if(ret)
@@ -379,7 +381,7 @@ void *test_save(void *param)
                 printf("mpp_vdec_error_check error chn %d neet restart vdec\n",chn);
                 mpp_vdec_stop(chn);
                 mpp_vdec_close(chn);
-                stop_flag = 1;
+                stop_flag[chn] = 1;
             }
         }
         else
@@ -390,9 +392,10 @@ void *test_save(void *param)
             }
             else if(video_info->frame_type == 1)
             {
+		printf("restart vdec chn = %d\n", chn);
                 mpp_vdec_open(chn);
                 mpp_vdec_start(chn);
-                stop_flag = 0;
+                stop_flag[chn] = 0;
                 goto retry;
             }
         }
@@ -534,7 +537,7 @@ int save_jpg(FRAME_INFO_S *frame_info,cJSON *root)
     FD_SET(VencFd, &read_fds);
     
     struct timeval TimeoutVal;
-    TimeoutVal.tv_sec  = 2;
+    TimeoutVal.tv_sec  = 10;
     TimeoutVal.tv_usec = 0;//1000 * 200;
     s32Ret = select(VencFd + 1, &read_fds, NULL, NULL, &TimeoutVal);
     if (s32Ret < 0)
@@ -631,15 +634,17 @@ int save_jpg(FRAME_INFO_S *frame_info,cJSON *root)
 
             fclose(fp);
 
+			// to do add osd to image
+			//draw_text(file_name);
+			//printf("=========== draw_text done ================\r\n");
+
             FILE *file = fopen(json_name, "w");
             char *jsonString = cJSON_Print(root);
             fprintf(file, "%s\n", jsonString);
             fclose(file);
             free(jsonString);
 			
-			// to do add osd to image
-			draw_text(file_name);
-			//printf("=========== draw_text done ================\r\n");
+			
 
             s32Ret = net_send_result(file_name,json_name);
             if(s32Ret)
@@ -789,7 +794,7 @@ void *lenovo_alg(void *param)
         int resizeImgHeight = 640;
         float iou_th = 0.3;
         //float conf_th = 0.6;
-	float conf_th = 0.1;
+		float conf_th = 0.1;
         int class_num = 8;
         int saveFlag = 0;  //如果开启存图,此项置为1
         const char* saveFolder = "tmp/result";
@@ -830,7 +835,7 @@ int vdec_frame(int chn, void*packet)
     //测试存图功能和网络发送功能
     num[chn]++;
     //if(num[chn] % 1000 == 0)
-	if(num[chn] % 50 == 0)
+	if(num[chn] % 100 == 0)
     {
         dishes.push(frame_info);
 		//printf("vdec chn %d u32Width %d u32Height %d\n",chn,frame_info->frame.stVFrame.u32Width,frame_info->frame.stVFrame.u32Height);
@@ -1165,6 +1170,44 @@ int net_init()
     return 0;
 }
 
+int get_req_file(char * file)
+{
+	char front[32] = {0};
+	char tail[8] = {0};
+	char * p = NULL;
+	DIR * dir = opendir("/userdata/");
+
+	if(dir == NULL)
+	{
+		printf("dir == NULL\r\n");
+		return -1;
+	}
+
+	struct dirent * dirp;
+	while(1)
+	{
+		dirp = readdir(dir);
+		if(dirp == NULL)
+		{
+		    break;
+		}
+
+		p = strchr(dirp->d_name, '.');
+		if(p != NULL)
+		{
+			p += 1;
+			if(strcmp(p, "req") == 0)
+			{
+				memcpy(front, dirp->d_name, p - dirp->d_name - 1);
+				sprintf(file, "/userdata/lenovo_alg/%s.lic", front);
+			}
+		}
+	}
+	//关闭目录
+	closedir(dir);
+	return 0;
+}
+
 int main()
 {
     SC_U32 u32ChipId;
@@ -1207,9 +1250,12 @@ int main()
 
     // 生成Req文件
     SVP_NPU_GenerateLicense();
-
+   
+    char lic_file_path[64] = {0};
+    get_req_file(lic_file_path);
+    //printf("------ file : %s\r\n", file_name);
     //lenovo alg init 
-    const char *lic_file_path = "/userdata/lenovo_alg/0c0f4da4.lic"; //"/userdata/lenovo_alg/f1232d9f.lic";
+    //const char *lic_file_path = "/userdata/lenovo_alg/f1232d9f.lic"; //d15813db;0c0f4da4;f1232d9f;09eed5b0;f0357b4a
     // 公钥文件
     const char *public_key_path = "/userdata/lenovo_alg/public_key.pem";
 

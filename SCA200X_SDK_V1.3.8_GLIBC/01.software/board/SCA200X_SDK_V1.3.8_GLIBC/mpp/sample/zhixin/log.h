@@ -4,6 +4,7 @@
 #define FALSE 0
 
 #define COMMON_INI_PATH "/userdata/common.ini"
+#define PARAM_INI_PATH "/userdata/param.ini"
 #define CONFIG_INI_PATH "/userdata/config.ini"
 #define ALARM_HISTORY_PATH	"/userdata/history_alarm.db"
 #define CAMERA_PATH	"/userdata/camera.db"

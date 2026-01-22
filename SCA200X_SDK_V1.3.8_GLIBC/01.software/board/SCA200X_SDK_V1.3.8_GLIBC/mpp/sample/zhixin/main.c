@@ -19,6 +19,7 @@ extern char alarm_type_list[16];
 int main()
 {
 	parse_common_ini(COMMON_INI_PATH);
+	parse_param_ini(PARAM_INI_PATH);
 //	read_common_ini_timestamp = get_file_timestamp(COMMON_INI_PATH);
 	parse_config_ini_file(CONFIG_INI_PATH);
 //	read_config_timestamp = get_file_timestamp(CONFIG_INI_PATH);

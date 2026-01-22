@@ -122,6 +122,39 @@ int set_version(char * version)
 	return 0;
 }
 
+int get_local_ip()
+{
+	char buf[1024] = {0};
+	char local_ip[16] = {0};
+	int ip1 = 0;
+	int ip2 = 0;
+	int ip3 = 0;
+	int ip4 = 0;
+	
+	FILE * fp = fopen("/etc/network/interfaces", "r");
+	if(fp == NULL){
+		log("fp == NULL, open /etc/network/interfaces error\r\n");
+		return -1;
+	}
+
+	fread(buf, 1, 1024, fp);
+
+	fclose(fp);
+
+	char *data_Start = NULL;
+    char *data_ValueStart = NULL;
+    char *data_ValueEnd = NULL;
+
+	data_Start = strstr(buf, "address ");
+    data_ValueStart = data_Start + strlen("address ");
+    data_ValueEnd = strchr(data_ValueStart + 1, 'n');
+    strncpy(local_ip, data_ValueStart, data_ValueEnd - data_ValueStart - 1);
+	sscanf(local_ip, "%d.%d.%d.%d", &ip1, &ip2, &ip3, &ip4);
+
+	return ip4;
+}
+
+
 int send_device_info(char * buf)
 {
 	memset(buf, 0, MAX_BUF_SIZE);
@@ -129,7 +162,9 @@ int send_device_info(char * buf)
 	char device[5][13] = {0};
 	char version[16] = {0};
 	log("device_name = %s\r\n", device_name);
-	memcpy(device[0], device_name, 13);
+	int ip4 = get_local_ip();
+	//memcpy(device[0], device_name, 13);
+	sprintf(device[0], "1202SC%03d000", ip4);
 	
 	for(int i = 0; i < 4; i ++){
 		if(strncmp(camera_name[i], "000000", 6) != 0){
@@ -304,6 +339,8 @@ static void * tcp_process(void * args)
 		if(sockfd < 0){
 			log("tcp  connect error\r\n");
 			sleep(3);
+			close(sockfd);
+			sockfd = -1;
 			continue;
 		}
 		log("tcp_connect success sockfd = %d\r\n", sockfd);

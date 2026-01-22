@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <dirent.h>
 
 #include "cJSON.h"
 #include "sample_npu_main.h"
@@ -22,6 +23,44 @@ void SAMPLE_SVP_Usage(char *pchPrgName)
 {
     printf("Usage : %s <image_path> <model_path> \n", pchPrgName);
 }
+
+int get_lic_file(char * file)
+{
+	char front[32] = {0};
+	char tail[8] = {0};
+	char * p = NULL;
+	DIR * dir = opendir("/userdata/lenovo_alg/");
+
+	if(dir == NULL)
+	{
+		printf("dir == NULL\r\n");
+		return -1;
+	}
+
+	struct dirent * dirp;
+	while(1)
+	{
+		dirp = readdir(dir);
+		if(dirp == NULL)
+		{
+		    break;
+		}
+
+		p = strchr(dirp->d_name, '.');
+		if(p != NULL)
+		{
+			p += 1;
+			if(strcmp(p, "lic") == 0)
+			{
+				memcpy(file, dirp->d_name, strlen(dirp->d_name));
+			}
+		}
+	}
+	//关闭目录
+	closedir(dir);
+	return 0;
+}
+
 
 /******************************************************************************
 * function : npu sample
@@ -54,7 +93,10 @@ int main(int argc, char *argv[])
     SAMPLE_SVP_TRACE_INFO("----------------:\n");
     // license文件
     //const char *lic_file_path = "ef2bea9a18ee4cc5a58aedb173ed3a6e.lic";
-    const char *lic_file_path = "f1232d9f.lic";
+    //const char *lic_file_path = "0c0f4da4.lic";//d15813db;f1232d9f;09eed5b0;f0357b4a
+    char lic_file_path[16] = {0};
+    get_lic_file(lic_file_path); 
+    printf("lic_file_path = %s\r\n", lic_file_path);
 
     // 公钥文件
     const char *public_key_path = "public_key.pem";

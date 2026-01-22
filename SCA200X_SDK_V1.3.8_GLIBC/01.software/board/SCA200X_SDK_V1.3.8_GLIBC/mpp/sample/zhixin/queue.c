@@ -10,14 +10,10 @@ void queue_init(ImageQueue *queue)
 {
     memset(queue, 0, sizeof(ImageQueue));
     for (int i = 0; i < QUEUE_SIZE; i++) {
-        queue->elements[i].image_path = (char *)malloc(PATH_LEN);  // 分配内存
-        queue->elements[i].result_path = (char *)malloc(PATH_LEN);  // 分配内存
-        if (queue->elements[i].result_path == NULL || queue->elements[i].image_path == NULL) {
-            perror("Failed to allocate memory");
-            exit(EXIT_FAILURE);
-        }
+        memset(queue->elements[i].image_path, 0, PATH_LEN);
+		memset(queue->elements[i].result_path, 0, PATH_LEN);
         queue->elements[i].in_use = 0;  // 标记为空闲
-        printf("image path %p  result path %p\r\n", queue->elements[i].image_path, queue->elements[i].result_path);
+        //printf("image path %p  result path %p\r\n", queue->elements[i].image_path, queue->elements[i].result_path);
     }
     pthread_mutex_init(&queue->mutex, NULL);
     pthread_cond_init(&queue->cond, NULL);
@@ -35,8 +31,8 @@ void queue_allocate(ImageQueue *queue, char * image_path, char * result_path)
     // 获取空闲内存块
     //result_path = queue->elements[queue->head].result_path;
 	//image_path = queue->elements[queue->head].image_path;
-	memcpy(queue->elements[queue->head].image_path, image_path, 128);
-	memcpy(queue->elements[queue->head].result_path, result_path, 128);
+	memcpy(queue->elements[queue->head].image_path, image_path, PATH_LEN);
+	memcpy(queue->elements[queue->head].result_path, result_path, PATH_LEN);
     queue->elements[queue->head].in_use = 1;  // 标记为已占用
     queue->head = (queue->head + 1) % QUEUE_SIZE;
 
@@ -49,8 +45,10 @@ void queue_release(ImageQueue *queue, char * image_path, char * result_path)
     pthread_mutex_lock(&queue->mutex);
     // 查找释放的内存块并标记为空闲
     for (int i = 0; i < QUEUE_SIZE; i++) {
-        if (queue->elements[i].image_path == image_path && 
-			queue->elements[i].result_path == result_path) {
+        if (strcmp(queue->elements[i].image_path, image_path) == 0 && 
+			strcmp(queue->elements[i].result_path, result_path) == 0) {
+			memset(queue->elements[queue->head].image_path, 0, PATH_LEN);
+			memset(queue->elements[queue->head].result_path, 0, PATH_LEN);
             queue->elements[i].in_use = 0;  // 标记为未占用
             queue->tail = (queue->tail + 1) % QUEUE_SIZE;
             break;
